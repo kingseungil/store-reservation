@@ -1,5 +1,8 @@
 package com.store.auth.service;
 
+import static com.store.type.ErrorCode.ALREADY_EXISTED_USER;
+import static com.store.type.ErrorCode.NOT_SUPPORTED_USER_TYPE;
+import static com.store.type.ErrorCode.UNMATCHED_PASSWORD;
 import static com.store.type.UserType.CUSTOMER;
 import static com.store.type.UserType.MANAGER;
 
@@ -11,6 +14,7 @@ import com.store.dto.TokenDto;
 import com.store.entity.Authority;
 import com.store.entity.Customer;
 import com.store.entity.Manager;
+import com.store.exception.CustomException;
 import com.store.repository.CustomerRepository;
 import com.store.repository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +41,7 @@ public class AuthService {
     @Transactional
     public SignUpCustomer signUpCustomer(SignUpCustomer form) {
         if (customerRepository.findByUsername(form.getUsername()).isPresent()) {
-            // TODO : Custom Exception
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+            throw new CustomException(ALREADY_EXISTED_USER);
         }
 
         Authority authority = Authority.builder()
@@ -58,8 +61,7 @@ public class AuthService {
     @Transactional
     public SignUpManager signUpManager(SignUpManager form) {
         if (managerRepository.findByUsername(form.getUsername()).isPresent()) {
-            // TODO : Custom Exception
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+            throw new CustomException(ALREADY_EXISTED_USER);
         }
 
         Authority authority = Authority.builder()
@@ -81,8 +83,7 @@ public class AuthService {
 
         // Check the password
         if (!passwordEncoder.matches(form.getPassword(), userDetails.getPassword())) {
-            // TODO : Custom Exception
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new CustomException(UNMATCHED_PASSWORD);
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(
@@ -104,8 +105,7 @@ public class AuthService {
         } else if (MANAGER.equals(form.getUserType())) {
             userDetailsService = managerUserDetailsService;
         } else {
-            // TODO : Custom Exception
-            throw new RuntimeException("잘못된 유저 타입입니다.");
+            throw new CustomException(NOT_SUPPORTED_USER_TYPE);
         }
 
         return userDetailsService.loadUserByUsername(form.getUsername());

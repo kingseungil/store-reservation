@@ -1,6 +1,10 @@
 package com.store.auth.service;
 
+import static com.store.type.ErrorCode.NOT_ACTIVATED_USER;
+import static com.store.type.ErrorCode.USER_NOT_FOUND;
+
 import com.store.entity.Manager;
+import com.store.exception.CustomException;
 import com.store.repository.ManagerRepository;
 import java.util.Collections;
 import lombok.AllArgsConstructor;
@@ -25,9 +29,9 @@ public class ManagerUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return managerRepository.findByUsername(username)
                                 .map(manager -> createUser(username, manager))
-                                // TODO : Custom Exception
                                 .orElseThrow(
-                                  () -> new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다."));
+                                  () -> new CustomException(USER_NOT_FOUND)
+                                );
     }
 
     /**
@@ -37,8 +41,7 @@ public class ManagerUserDetailsService implements UserDetailsService {
      */
     private User createUser(String username, Manager manager) {
         if (!manager.isActivated()) {
-            // TODO : Custom Exception
-            throw new RuntimeException(username + " -> 활성화되어 있지 않습니다.");
+            throw new CustomException(NOT_ACTIVATED_USER);
         }
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(
           String.valueOf(manager.getAuthority().getAuthorityName()));
