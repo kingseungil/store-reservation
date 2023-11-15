@@ -42,7 +42,7 @@ public class CustomerUserDetailsService implements UserDetailsService {
         }
 
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(
-          customer.getAuthority().getAuthorityName());
+          String.valueOf(customer.getAuthority().getAuthorityName()));
 
         return new User(customer.getUsername(), customer.getPassword(), Collections.singleton(authority));
     }

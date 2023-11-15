@@ -1,5 +1,8 @@
 package com.store.auth.service;
 
+import static com.store.type.UserType.CUSTOMER;
+import static com.store.type.UserType.MANAGER;
+
 import com.store.auth.jwt.JwtTokenProvider;
 import com.store.dto.AuthDto.SignIn;
 import com.store.dto.AuthDto.SignUpCustomer;
@@ -39,7 +42,7 @@ public class AuthService {
         }
 
         Authority authority = Authority.builder()
-                                       .authorityName("ROLE_CUSTOMER")
+                                       .authorityName(CUSTOMER)
                                        .build();
 
         Customer customer = Customer.builder()
@@ -60,7 +63,7 @@ public class AuthService {
         }
 
         Authority authority = Authority.builder()
-                                       .authorityName("ROLE_MANAGER")
+                                       .authorityName(MANAGER)
                                        .build();
 
         Manager manager = Manager.builder()
@@ -96,9 +99,9 @@ public class AuthService {
 
     private UserDetails getUserDetails(SignIn form) {
         UserDetailsService userDetailsService;
-        if ("customer".equals(form.getUserType())) {
+        if (CUSTOMER.equals(form.getUserType())) {
             userDetailsService = customerUserDetailsService;
-        } else if ("manager".equals(form.getUserType())) {
+        } else if (MANAGER.equals(form.getUserType())) {
             userDetailsService = managerUserDetailsService;
         } else {
             // TODO : Custom Exception

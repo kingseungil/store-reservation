@@ -1,7 +1,11 @@
 package com.store.dto;
 
+import static com.store.type.UserType.CUSTOMER;
+import static com.store.type.UserType.MANAGER;
+
 import com.store.entity.Customer;
 import com.store.entity.Manager;
+import com.store.type.UserType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -28,7 +32,7 @@ public class AuthDto {
         private String password;
 
         @NotNull
-        private String userType;
+        private UserType userType;
     }
 
     @Getter
@@ -46,15 +50,13 @@ public class AuthDto {
         @Size(min = 3, max = 100)
         private String password;
 
-        private AuthorityDto authority;
+        private UserType authority;
 
         public static SignUpCustomer toEntity(Customer customer) {
             return SignUpCustomer.builder()
                                  .username(customer.getUsername())
                                  .password(customer.getPassword())
-                                 .authority(
-                                   AuthorityDto.builder().authorityName(customer.getAuthority().getAuthorityName())
-                                               .build())
+                                 .authority(CUSTOMER)
                                  .build();
         }
     }
@@ -74,15 +76,13 @@ public class AuthDto {
         @Size(min = 3, max = 100)
         private String password;
 
-        private AuthorityDto authority;
+        private UserType authority;
 
         public static SignUpManager toEntity(Manager manager) {
             return SignUpManager.builder()
                                 .username(manager.getUsername())
                                 .password(manager.getPassword())
-                                .authority(
-                                  AuthorityDto.builder().authorityName(manager.getAuthority().getAuthorityName())
-                                              .build())
+                                .authority(MANAGER)
                                 .build();
         }
     }

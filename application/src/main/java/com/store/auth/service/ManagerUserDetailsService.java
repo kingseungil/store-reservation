@@ -40,9 +40,8 @@ public class ManagerUserDetailsService implements UserDetailsService {
             // TODO : Custom Exception
             throw new RuntimeException(username + " -> 활성화되어 있지 않습니다.");
         }
-
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(
-          manager.getAuthority().getAuthorityName());
+          String.valueOf(manager.getAuthority().getAuthorityName()));
 
         return new User(manager.getUsername(), manager.getPassword(), Collections.singleton(authority));
     }

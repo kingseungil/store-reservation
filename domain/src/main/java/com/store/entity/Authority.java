@@ -1,7 +1,10 @@
 package com.store.entity;
 
+import com.store.type.UserType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -20,6 +23,7 @@ import lombok.Setter;
 public class Authority {
 
     @Id
+    @Enumerated(EnumType.STRING)
     @Column(name = "authority_name", length = 50)
-    private String authorityName;
+    private UserType authorityName;
 }
