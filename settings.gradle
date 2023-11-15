@@ -1,0 +1,5 @@
+rootProject.name = 'store-reservation'
+include 'application'
+include 'core'
+include 'domain'
+

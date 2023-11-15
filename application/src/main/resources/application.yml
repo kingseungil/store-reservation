@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    include:
+      - datasource
+      - log
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    
+server:
+  port: 8080

@@ -1,0 +1,34 @@
+version: "3.8"
+name: store-project
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql-docker
+    ports:
+      - "3306:3306"
+    volumes:
+      - ../mysql-data:/var/lib/mysql
+    env_file:
+      - env.properties
+    environment:
+      TZ: Asia/Seoul
+    networks:
+      - store-network
+
+  redis:
+    image: redis:latest
+    container_name: redis-docker
+    ports:
+      - "6379:6379"
+    volumes:
+      - ../redis-data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    restart: always
+    networks:
+      - store-network
+
+networks:
+  store-network:
+    driver: bridge
