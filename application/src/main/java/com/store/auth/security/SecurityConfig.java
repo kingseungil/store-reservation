@@ -1,6 +1,5 @@
 package com.store.auth.security;
 
-import com.store.auth.jwt.JwtAccessDeniedHandler;
 import com.store.auth.jwt.JwtAuthenticationEntryPoint;
 import com.store.auth.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,6 @@ public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -48,7 +46,6 @@ public class SecurityConfig {
 
           .authorizeHttpRequests(authorizeRequests -> authorizeRequests
             .requestMatchers("/api/signin").permitAll() // 로그인 api
-            .requestMatchers("/api/signin/test").hasAnyRole("CUSTOMER", "MANAGER") // 테스트 api
             .requestMatchers("/api/signup-customer").permitAll() // 회원가입 api
             .requestMatchers("/api/signup-manager").permitAll() // 회원가입 api
             .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll() // swagger

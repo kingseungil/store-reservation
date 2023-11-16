@@ -28,18 +28,17 @@ public class ManagerUserDetailsService implements UserDetailsService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return managerRepository.findByUsername(username)
-                                .map(manager -> createUser(username, manager))
+                                .map(this::createUser)
                                 .orElseThrow(
                                   () -> new CustomException(USER_NOT_FOUND)
                                 );
     }
 
     /**
-     * @param username 유저 이름
-     * @param manager  manager 엔티티
+     * @param manager manager 엔티티
      * @return UserDetails 객체
      */
-    private User createUser(String username, Manager manager) {
+    private User createUser(Manager manager) {
         if (!manager.isActivated()) {
             throw new CustomException(NOT_ACTIVATED_USER);
         }

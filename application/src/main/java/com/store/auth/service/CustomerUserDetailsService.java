@@ -28,18 +28,17 @@ public class CustomerUserDetailsService implements UserDetailsService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return customerRepository.findByUsername(username)
-                                 .map(customer -> createUser(username, customer))
+                                 .map(this::createUser)
                                  .orElseThrow(
                                    () -> new CustomException(USER_NOT_FOUND)
                                  );
     }
 
     /**
-     * @param username 유저 이름
      * @param customer user 엔티티
      * @return UserDetails 객체
      */
-    private User createUser(String username, Customer customer) {
+    private User createUser(Customer customer) {
         if (!customer.isActivated()) {
             throw new CustomException(NOT_ACTIVATED_USER);
         }
