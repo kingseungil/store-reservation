@@ -1,6 +1,6 @@
 package com.store.entity;
 
-import com.store.type.UserType;
+import com.store.type.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -25,5 +25,5 @@ public class Authority {
     @Id
     @Enumerated(EnumType.STRING)
     @Column(name = "authority_name", length = 50)
-    private UserType authorityName;
+    private UserRole authorityName;
 }

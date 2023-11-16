@@ -1,11 +1,11 @@
 package com.store.dto;
 
-import static com.store.type.UserType.CUSTOMER;
-import static com.store.type.UserType.MANAGER;
+import static com.store.type.UserRole.ROLE_CUSTOMER;
+import static com.store.type.UserRole.ROLE_MANAGER;
 
 import com.store.entity.Customer;
 import com.store.entity.Manager;
-import com.store.type.UserType;
+import com.store.type.UserRole;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -32,7 +32,7 @@ public class AuthDto {
         private String password;
 
         @NotNull
-        private UserType userType;
+        private UserRole userRole;
     }
 
     @Getter
@@ -50,13 +50,13 @@ public class AuthDto {
         @Size(min = 3, max = 100)
         private String password;
 
-        private UserType authority;
+        private UserRole authority;
 
         public static SignUpCustomer toEntity(Customer customer) {
             return SignUpCustomer.builder()
                                  .username(customer.getUsername())
                                  .password(customer.getPassword())
-                                 .authority(CUSTOMER)
+                                 .authority(ROLE_CUSTOMER)
                                  .build();
         }
     }
@@ -76,13 +76,13 @@ public class AuthDto {
         @Size(min = 3, max = 100)
         private String password;
 
-        private UserType authority;
+        private UserRole authority;
 
         public static SignUpManager toEntity(Manager manager) {
             return SignUpManager.builder()
                                 .username(manager.getUsername())
                                 .password(manager.getPassword())
-                                .authority(MANAGER)
+                                .authority(ROLE_MANAGER)
                                 .build();
         }
     }

@@ -3,8 +3,8 @@ package com.store.auth.service;
 import static com.store.type.ErrorCode.ALREADY_EXISTED_USER;
 import static com.store.type.ErrorCode.NOT_SUPPORTED_USER_TYPE;
 import static com.store.type.ErrorCode.UNMATCHED_PASSWORD;
-import static com.store.type.UserType.CUSTOMER;
-import static com.store.type.UserType.MANAGER;
+import static com.store.type.UserRole.ROLE_CUSTOMER;
+import static com.store.type.UserRole.ROLE_MANAGER;
 
 import com.store.auth.jwt.JwtTokenProvider;
 import com.store.dto.AuthDto.SignIn;
@@ -45,7 +45,7 @@ public class AuthService {
         }
 
         Authority authority = Authority.builder()
-                                       .authorityName(CUSTOMER)
+                                       .authorityName(ROLE_CUSTOMER)
                                        .build();
 
         Customer customer = Customer.builder()
@@ -65,7 +65,7 @@ public class AuthService {
         }
 
         Authority authority = Authority.builder()
-                                       .authorityName(MANAGER)
+                                       .authorityName(ROLE_MANAGER)
                                        .build();
 
         Manager manager = Manager.builder()
@@ -100,9 +100,9 @@ public class AuthService {
 
     private UserDetails getUserDetails(SignIn form) {
         UserDetailsService userDetailsService;
-        if (CUSTOMER.equals(form.getUserType())) {
+        if (ROLE_CUSTOMER.equals(form.getUserRole())) {
             userDetailsService = customerUserDetailsService;
-        } else if (MANAGER.equals(form.getUserType())) {
+        } else if (ROLE_MANAGER.equals(form.getUserRole())) {
             userDetailsService = managerUserDetailsService;
         } else {
             throw new CustomException(NOT_SUPPORTED_USER_TYPE);
