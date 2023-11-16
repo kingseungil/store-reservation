@@ -18,6 +18,7 @@ public class AdminInitializer implements ApplicationRunner {
     private final PasswordEncoder passwordEncoder;
     private final ManagerRepository managerRepository;
 
+    // Application이 실행되면서 admin 계정이 없으면 생성
     @Override
     public void run(ApplicationArguments args) throws Exception {
         if (managerRepository.findByUsername("admin").isEmpty()) {

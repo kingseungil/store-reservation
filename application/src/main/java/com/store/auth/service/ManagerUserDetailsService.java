@@ -24,6 +24,13 @@ public class ManagerUserDetailsService implements UserDetailsService {
 
     private final ManagerRepository managerRepository;
 
+    /**
+     * 주어진 사용자 이름에 해당하는 사용자의 인증 정보를 로드합니다. 사용자 이름에 해당하는 사용자가 존재하지 않는 경우, CustomException이 발생합니다.
+     *
+     * @param username 사용자 이름
+     * @return UserDetails 사용자 인증 정보
+     * @throws CustomException 사용자가 존재하지 않을 경우 발생
+     */
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -35,8 +42,11 @@ public class ManagerUserDetailsService implements UserDetailsService {
     }
 
     /**
-     * @param manager manager 엔티티
-     * @return UserDetails 객체
+     * Customer 엔티티를 UserDetails로 변환합니다. 사용자가 활성화되지 않은 경우, CustomException이 발생합니다.
+     *
+     * @param manager Customer 엔티티
+     * @return User UserDetails 인스턴스
+     * @throws CustomException 사용자가 활성화되지 않은 경우 발생
      */
     private User createUser(Manager manager) {
         if (!manager.isActivated()) {

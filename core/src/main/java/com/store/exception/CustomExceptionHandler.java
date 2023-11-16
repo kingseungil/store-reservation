@@ -1,13 +1,11 @@
 package com.store.exception;
 
-import static com.store.type.ErrorCode.ACCESS_DENIED;
 import static com.store.type.ErrorCode.INTERNAL_SERVER_ERROR;
 import static com.store.type.ErrorCode.INVALID_REQUEST;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -25,18 +23,6 @@ public class CustomExceptionHandler {
         return ErrorResponse.builder()
                             .errorCode(e.getErrorCode())
                             .errorMessage(e.getErrorMessage())
-                            .build();
-    }
-
-    // security 에러
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler(AccessDeniedException.class)
-    public ErrorResponse handleAccessDeniedException(AccessDeniedException e) {
-        log.error(e.getMessage() + " is occurred", e);
-
-        return ErrorResponse.builder()
-                            .errorCode(ACCESS_DENIED)
-                            .errorMessage(ACCESS_DENIED.getDescription())
                             .build();
     }
 

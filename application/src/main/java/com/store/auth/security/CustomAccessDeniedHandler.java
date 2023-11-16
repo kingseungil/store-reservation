@@ -19,6 +19,8 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    // 시큐리티 단에서 발생하는 AccessDeniedException 예외 처리
+    // CustomException에서 처리해주고 싶었는데, AccessDeniedException은 FilterChain에서 발생하는 예외라서 CustomException에서 처리할 수 없었음
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
       AccessDeniedException accessDeniedException) throws IOException, ServletException {

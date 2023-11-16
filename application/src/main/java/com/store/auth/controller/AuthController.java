@@ -26,18 +26,36 @@ public class AuthController {
 
     private final AuthService authService;
 
+    /**
+     * 고객 회원가입
+     *
+     * @param form 회원가입 폼
+     * @return 회원가입 결과
+     */
     @PostMapping("/signup-customer")
     public ResponseEntity<SignUpCustomer> signUpCustomer(
       @Valid @RequestBody AuthDto.SignUpCustomer form) {
         return ResponseEntity.ok(authService.signUpCustomer(form));
     }
 
+    /**
+     * 매니저(상점) 회원가입
+     *
+     * @param form 회원가입 폼
+     * @return 회원가입 결과
+     */
     @PostMapping("/signup-manager")
     public ResponseEntity<SignUpManager> signUpManager(
       @Valid @RequestBody AuthDto.SignUpManager form) {
         return ResponseEntity.ok(authService.signUpManager(form));
     }
 
+    /**
+     * 로그인
+     *
+     * @param form 로그인 폼
+     * @return 토큰
+     */
     @PostMapping("/signin")
     public ResponseEntity<TokenDto> signIn(@Valid @RequestBody AuthDto.SignIn form) {
         TokenDto tokenDto = authService.signIn(form);

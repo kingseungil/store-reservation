@@ -15,6 +15,7 @@ public class AuthenticationManagerConfig {
     private final ManagerUserDetailsService managerUserDetailsService;
     private final PasswordEncoder passwordEncoder;
 
+    // AuthenticationManagerBuilder를 통해 인증을 진행할 UserDetailsService와 PasswordEncoder를 설정
     @Bean
     public AuthenticationManagerBuilder customerAuthenticationManagerBuilder() throws Exception {
         AuthenticationManagerBuilder builder = new AuthenticationManagerBuilder(null);

@@ -38,6 +38,17 @@ public class AuthService {
     private final CustomerUserDetailsService customerUserDetailsService;
     private final ManagerUserDetailsService managerUserDetailsService;
 
+    /**
+     * 고객 회원가입
+     * <p>
+     * 1. 이미 존재하는지 확인
+     * <p>
+     * 2. 존재하지 않으면 회원가입
+     *
+     * @param form 회원가입 폼
+     * @return 회원가입 결과
+     * @throws CustomException 유저가 이미 존재하는 경우 발생
+     */
     @Transactional
     public SignUpCustomer signUpCustomer(SignUpCustomer form) {
         if (customerRepository.findByUsername(form.getUsername()).isPresent()) {
@@ -58,6 +69,17 @@ public class AuthService {
         return SignUpCustomer.toEntity(customerRepository.save(customer));
     }
 
+    /**
+     * 매니저(상점) 회원가입
+     * <p>
+     * 1. 이미 존재하는지 확인
+     * <p>
+     * 2. 존재하지 않으면 회원가입
+     *
+     * @param form 회원가입 폼
+     * @return 회원가입 결과
+     * @throws CustomException 유저가 이미 존재하는 경우 발생
+     */
     @Transactional
     public SignUpManager signUpManager(SignUpManager form) {
         if (managerRepository.findByUsername(form.getUsername()).isPresent()) {
@@ -78,6 +100,19 @@ public class AuthService {
         return SignUpManager.toEntity(managerRepository.save(manager));
     }
 
+    /**
+     * 로그인
+     * <p>
+     * 1. 로그인 폼에서 받은 UserRole에 따라 UserDetailsService를 선택
+     * <p>
+     * 2. UserDetails에서 비밀번호를 가져와서 입력받은 비밀번호와 비교
+     * <p>
+     * 3. 비밀번호가 일치하면 토큰 생성
+     *
+     * @param form 로그인 폼
+     * @return 토큰
+     * @throws CustomException 비밀번호가 일치하지 않을 경우 발생
+     */
     public TokenDto signIn(SignIn form) {
         UserDetails userDetails = getUserDetails(form);
 
