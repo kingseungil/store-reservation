@@ -44,7 +44,17 @@ allprojects {
 }
 
 project(':core') {
-    dependencies {}
+    dependencies {
+
+        //Spring Boot
+        implementation 'org.springframework.boot:spring-boot-starter'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+        // Security
+        implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    }
 }
 
 project(':domain') {
@@ -85,9 +95,6 @@ project(':application') {
 
         // Security
         implementation 'org.springframework.boot:spring-boot-starter-security'
-
-        //자동 설정
-        annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
         //test
         testImplementation 'io.rest-assured:rest-assured'

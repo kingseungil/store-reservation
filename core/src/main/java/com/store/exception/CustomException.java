@@ -21,4 +21,9 @@ public class CustomException extends RuntimeException {
         this.errorCode = errorCode;
         this.errorMessage = errorCode.getDescription();
     }
+
+    @Override
+    public String getMessage() {
+        return errorMessage;
+    }
 }

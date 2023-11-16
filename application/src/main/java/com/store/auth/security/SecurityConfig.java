@@ -40,7 +40,7 @@ public class SecurityConfig {
           // exception handling 설정
           .exceptionHandling(exceptionHandling -> exceptionHandling
             .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-            .accessDeniedHandler(jwtAccessDeniedHandler))
+          )
 
           // 세션은 사용하지 않으므로 STATELESS로 설정
           .sessionManagement(sessionManagement -> sessionManagement
@@ -48,7 +48,7 @@ public class SecurityConfig {
 
           .authorizeHttpRequests(authorizeRequests -> authorizeRequests
             .requestMatchers("/api/signin").permitAll() // 로그인 api
-            .requestMatchers("/api/signin/test").hasRole("CUSTOMER")
+            .requestMatchers("/api/signin/test").hasAnyRole("CUSTOMER", "MANAGER") // 테스트 api
             .requestMatchers("/api/signup-customer").permitAll() // 회원가입 api
             .requestMatchers("/api/signup-manager").permitAll() // 회원가입 api
             .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll() // swagger
