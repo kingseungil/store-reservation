@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,4 +27,10 @@ public class Authority {
     @Enumerated(EnumType.STRING)
     @Column(name = "authority_name", length = 50)
     private UserRole authorityName;
+
+    @OneToOne(mappedBy = "authority")
+    private Customer customer;
+
+    @OneToOne(mappedBy = "authority")
+    private Manager manager;
 }

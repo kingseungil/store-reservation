@@ -6,7 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,7 +37,7 @@ public class Customer extends BaseEntity {
     @Column(name = "activated")
     private boolean activated;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "authority_name")
     private Authority authority;
 
