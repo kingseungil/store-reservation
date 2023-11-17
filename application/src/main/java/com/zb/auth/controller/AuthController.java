@@ -3,8 +3,9 @@ package com.zb.auth.controller;
 import com.zb.auth.jwt.JwtFilter;
 import com.zb.auth.service.AuthService;
 import com.zb.dto.auth.AuthDto;
-import com.zb.dto.auth.AuthDto.SignInResponse;
-import com.zb.dto.auth.AuthDto.SignUpResponse;
+import com.zb.dto.auth.AuthDto.SignIn;
+import com.zb.dto.auth.AuthDto.SignUpCustomer;
+import com.zb.dto.auth.AuthDto.SignUpManager;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +31,8 @@ public class AuthController {
      * @return 회원가입 결과
      */
     @PostMapping("/signup-customer")
-    public ResponseEntity<SignUpResponse> signUpCustomer(
-      @Valid @RequestBody AuthDto.SignUpCustomerRequest form) {
+    public ResponseEntity<SignUpCustomer.Response> signUpCustomer(
+      @Valid @RequestBody AuthDto.SignUpCustomer.Request form) {
         return ResponseEntity.ok(authService.signUpCustomer(form));
     }
 
@@ -42,8 +43,8 @@ public class AuthController {
      * @return 회원가입 결과
      */
     @PostMapping("/signup-manager")
-    public ResponseEntity<SignUpResponse> signUpManager(
-      @Valid @RequestBody AuthDto.SignUpManagerRequest form) {
+    public ResponseEntity<SignUpManager.Response> signUpManager(
+      @Valid @RequestBody AuthDto.SignUpManager.Request form) {
         return ResponseEntity.ok(authService.signUpManager(form));
     }
 
@@ -54,8 +55,8 @@ public class AuthController {
      * @return 토큰
      */
     @PostMapping("/signin")
-    public ResponseEntity<SignInResponse> signIn(@Valid @RequestBody AuthDto.SignInRequest form) {
-        SignInResponse token = authService.signIn(form);
+    public ResponseEntity<SignIn.Response> signIn(@Valid @RequestBody AuthDto.SignIn.Request form) {
+        SignIn.Response token = authService.signIn(form);
 
         // 토큰을 헤더에 넣어서 반환
         HttpHeaders httpHeaders = new HttpHeaders();

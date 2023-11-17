@@ -7,21 +7,18 @@ import static com.zb.type.UserRole.ROLE_CUSTOMER;
 import static com.zb.type.UserRole.ROLE_MANAGER;
 
 import com.zb.auth.jwt.JwtTokenProvider;
-import com.zb.dto.auth.AuthDto.SignInRequest;
-import com.zb.dto.auth.AuthDto.SignInResponse;
-import com.zb.dto.auth.AuthDto.SignUpCustomerRequest;
-import com.zb.dto.auth.AuthDto.SignUpManagerRequest;
-import com.zb.dto.auth.AuthDto.SignUpResponse;
+import com.zb.dto.auth.AuthDto.SignIn;
+import com.zb.dto.auth.AuthDto.SignUpCustomer;
+import com.zb.dto.auth.AuthDto.SignUpManager;
 import com.zb.entity.Authority;
 import com.zb.entity.Customer;
 import com.zb.entity.Manager;
 import com.zb.exception.CustomException;
 import com.zb.repository.CustomerRepository;
 import com.zb.repository.ManagerRepository;
+import com.zb.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -51,7 +48,7 @@ public class AuthService {
      * @throws CustomException 유저가 이미 존재하는 경우 발생
      */
     @Transactional
-    public SignUpResponse signUpCustomer(SignUpCustomerRequest form) {
+    public SignUpCustomer.Response signUpCustomer(SignUpCustomer.Request form) {
         if (customerRepository.findByUsername(form.getUsername()).isPresent()) {
             throw new CustomException(ALREADY_EXISTED_USER);
         }
@@ -70,10 +67,10 @@ public class AuthService {
         // 회원 저장
         customerRepository.save(customer);
 
-        return SignUpResponse.builder()
-                             .username(customer.getUsername())
-                             .authority(customer.getAuthority().getAuthorityName())
-                             .build();
+        return SignUpCustomer.Response.builder()
+                                      .username(customer.getUsername())
+                                      .authority(customer.getAuthority().getAuthorityName())
+                                      .build();
     }
 
     /**
@@ -88,7 +85,7 @@ public class AuthService {
      * @throws CustomException 유저가 이미 존재하는 경우 발생
      */
     @Transactional
-    public SignUpResponse signUpManager(SignUpManagerRequest form) {
+    public SignUpManager.Response signUpManager(SignUpManager.Request form) {
         if (managerRepository.findByUsername(form.getUsername()).isPresent()) {
             throw new CustomException(ALREADY_EXISTED_USER);
         }
@@ -107,10 +104,10 @@ public class AuthService {
         // 회원 저장
         managerRepository.save(manager);
 
-        return SignUpResponse.builder()
-                             .username(manager.getUsername())
-                             .authority(manager.getAuthority().getAuthorityName())
-                             .build();
+        return SignUpManager.Response.builder()
+                                     .username(manager.getUsername())
+                                     .authority(manager.getAuthority().getAuthorityName())
+                                     .build();
     }
 
     /**
@@ -126,27 +123,28 @@ public class AuthService {
      * @return 토큰
      * @throws CustomException 비밀번호가 일치하지 않을 경우 발생
      */
-    public SignInResponse signIn(SignInRequest form) {
+    public SignIn.Response signIn(SignIn.Request form) {
         UserDetails userDetails = getUserDetails(form);
 
-        // Check the password
+        checkPassword(form, userDetails);
+
+        // SecurityContextHolder에 인증 정보를 저장
+        Authentication authentication = SecurityUtil.authenticate(userDetails);
+        
+        String jwt = jwtTokenProvider.createToken(authentication);
+
+        return SignIn.Response.builder()
+                              .token(jwt)
+                              .build();
+    }
+
+    private void checkPassword(SignIn.Request form, UserDetails userDetails) {
         if (!passwordEncoder.matches(form.getPassword(), userDetails.getPassword())) {
             throw new CustomException(UNMATCHED_PASSWORD);
         }
-
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-          userDetails, null, userDetails.getAuthorities()
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String jwt = jwtTokenProvider.createToken(authentication);
-
-        return SignInResponse.builder()
-                             .token(jwt)
-                             .build();
     }
 
-    private UserDetails getUserDetails(SignInRequest form) {
+    private UserDetails getUserDetails(SignIn.Request form) {
         UserDetailsService userDetailsService;
         if (ROLE_CUSTOMER.equals(form.getUserRole())) {
             userDetailsService = customerUserDetailsService;

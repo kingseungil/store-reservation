@@ -7,87 +7,91 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 
 public class AuthDto {
 
-    @Getter
-    @Setter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class SignInRequest {
+    public static class SignIn {
 
-        @NotNull
-        @Size(min = 3, max = 50)
-        private String username;
+        @Getter
+        public static class Request {
 
-        @NotNull
-        @Size(min = 3, max = 100)
-        private String password;
+            @NotNull
+            @Size(min = 3, max = 50)
+            private String username;
 
-        @NotNull
-        private UserRole userRole;
+            @NotNull
+            @Size(min = 3, max = 100)
+            private String password;
+
+            @NotNull
+            private UserRole userRole;
+        }
+
+
+        @Getter
+        @AllArgsConstructor
+        @NoArgsConstructor
+        @Builder
+        public static class Response {
+
+            private String token;
+        }
     }
 
-    @Getter
-    @Setter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class SignInResponse {
+    public static class SignUpCustomer {
 
-        @NotNull
-        private String token;
+        @Getter
+        public static class Request {
+
+            @NotNull
+            @Size(min = 3, max = 50)
+            private String username;
+
+            @NotNull
+            @Size(min = 3, max = 100)
+            private String password;
+
+            private UserRole authority;
+        }
+
+
+        @Getter
+        @AllArgsConstructor
+        @NoArgsConstructor
+        @Builder
+        public static class Response {
+
+            private String username;
+            private UserRole authority;
+        }
     }
 
-    @Getter
-    @Setter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class SignUpCustomerRequest {
+    public static class SignUpManager {
 
-        @NotNull
-        @Size(min = 3, max = 50)
-        private String username;
+        @Getter
+        public static class Request {
 
-        @NotNull
-        @Size(min = 3, max = 100)
-        private String password;
+            @NotNull
+            @Size(min = 3, max = 50)
+            private String username;
 
-        private UserRole authority;
+            @NotNull
+            @Size(min = 3, max = 100)
+            private String password;
 
-    }
+            private UserRole authority;
+        }
 
-    @Getter
-    @Setter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class SignUpManagerRequest {
 
-        @NotNull
-        @Size(min = 3, max = 50)
-        private String username;
+        @Getter
+        @AllArgsConstructor
+        @NoArgsConstructor
+        @Builder
+        public static class Response {
 
-        @NotNull
-        @Size(min = 3, max = 100)
-        private String password;
-
-        private UserRole authority;
-    }
-
-    @Getter
-    @Setter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class SignUpResponse {
-
-        private String username;
-        private UserRole authority;
-
+            private String username;
+            private UserRole authority;
+        }
     }
 }
