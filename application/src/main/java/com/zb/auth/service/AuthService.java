@@ -7,10 +7,11 @@ import static com.zb.type.UserRole.ROLE_CUSTOMER;
 import static com.zb.type.UserRole.ROLE_MANAGER;
 
 import com.zb.auth.jwt.JwtTokenProvider;
-import com.zb.dto.auth.AuthDto.SignIn;
-import com.zb.dto.auth.AuthDto.SignUpCustomer;
-import com.zb.dto.auth.AuthDto.SignUpManager;
-import com.zb.dto.auth.TokenDto;
+import com.zb.dto.auth.AuthDto.SignInRequest;
+import com.zb.dto.auth.AuthDto.SignInResponse;
+import com.zb.dto.auth.AuthDto.SignUpCustomerRequest;
+import com.zb.dto.auth.AuthDto.SignUpManagerRequest;
+import com.zb.dto.auth.AuthDto.SignUpResponse;
 import com.zb.entity.Authority;
 import com.zb.entity.Customer;
 import com.zb.entity.Manager;
@@ -50,7 +51,7 @@ public class AuthService {
      * @throws CustomException 유저가 이미 존재하는 경우 발생
      */
     @Transactional
-    public SignUpCustomer signUpCustomer(SignUpCustomer form) {
+    public SignUpResponse signUpCustomer(SignUpCustomerRequest form) {
         if (customerRepository.findByUsername(form.getUsername()).isPresent()) {
             throw new CustomException(ALREADY_EXISTED_USER);
         }
@@ -66,7 +67,13 @@ public class AuthService {
                                     .authority(authority)
                                     .build();
 
-        return SignUpCustomer.toEntity(customerRepository.save(customer));
+        // 회원 저장
+        customerRepository.save(customer);
+
+        return SignUpResponse.builder()
+                             .username(customer.getUsername())
+                             .authority(customer.getAuthority().getAuthorityName())
+                             .build();
     }
 
     /**
@@ -81,7 +88,7 @@ public class AuthService {
      * @throws CustomException 유저가 이미 존재하는 경우 발생
      */
     @Transactional
-    public SignUpManager signUpManager(SignUpManager form) {
+    public SignUpResponse signUpManager(SignUpManagerRequest form) {
         if (managerRepository.findByUsername(form.getUsername()).isPresent()) {
             throw new CustomException(ALREADY_EXISTED_USER);
         }
@@ -97,7 +104,13 @@ public class AuthService {
                                  .authority(authority)
                                  .build();
 
-        return SignUpManager.toEntity(managerRepository.save(manager));
+        // 회원 저장
+        managerRepository.save(manager);
+
+        return SignUpResponse.builder()
+                             .username(manager.getUsername())
+                             .authority(manager.getAuthority().getAuthorityName())
+                             .build();
     }
 
     /**
@@ -113,7 +126,7 @@ public class AuthService {
      * @return 토큰
      * @throws CustomException 비밀번호가 일치하지 않을 경우 발생
      */
-    public TokenDto signIn(SignIn form) {
+    public SignInResponse signIn(SignInRequest form) {
         UserDetails userDetails = getUserDetails(form);
 
         // Check the password
@@ -128,12 +141,12 @@ public class AuthService {
 
         String jwt = jwtTokenProvider.createToken(authentication);
 
-        return TokenDto.builder()
-                       .token(jwt)
-                       .build();
+        return SignInResponse.builder()
+                             .token(jwt)
+                             .build();
     }
 
-    private UserDetails getUserDetails(SignIn form) {
+    private UserDetails getUserDetails(SignInRequest form) {
         UserDetailsService userDetailsService;
         if (ROLE_CUSTOMER.equals(form.getUserRole())) {
             userDetailsService = customerUserDetailsService;

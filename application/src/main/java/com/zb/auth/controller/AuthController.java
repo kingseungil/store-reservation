@@ -3,9 +3,8 @@ package com.zb.auth.controller;
 import com.zb.auth.jwt.JwtFilter;
 import com.zb.auth.service.AuthService;
 import com.zb.dto.auth.AuthDto;
-import com.zb.dto.auth.AuthDto.SignUpCustomer;
-import com.zb.dto.auth.AuthDto.SignUpManager;
-import com.zb.dto.auth.TokenDto;
+import com.zb.dto.auth.AuthDto.SignInResponse;
+import com.zb.dto.auth.AuthDto.SignUpResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +30,8 @@ public class AuthController {
      * @return 회원가입 결과
      */
     @PostMapping("/signup-customer")
-    public ResponseEntity<SignUpCustomer> signUpCustomer(
-      @Valid @RequestBody AuthDto.SignUpCustomer form) {
+    public ResponseEntity<SignUpResponse> signUpCustomer(
+      @Valid @RequestBody AuthDto.SignUpCustomerRequest form) {
         return ResponseEntity.ok(authService.signUpCustomer(form));
     }
 
@@ -43,8 +42,8 @@ public class AuthController {
      * @return 회원가입 결과
      */
     @PostMapping("/signup-manager")
-    public ResponseEntity<SignUpManager> signUpManager(
-      @Valid @RequestBody AuthDto.SignUpManager form) {
+    public ResponseEntity<SignUpResponse> signUpManager(
+      @Valid @RequestBody AuthDto.SignUpManagerRequest form) {
         return ResponseEntity.ok(authService.signUpManager(form));
     }
 
@@ -55,13 +54,14 @@ public class AuthController {
      * @return 토큰
      */
     @PostMapping("/signin")
-    public ResponseEntity<TokenDto> signIn(@Valid @RequestBody AuthDto.SignIn form) {
-        TokenDto tokenDto = authService.signIn(form);
+    public ResponseEntity<SignInResponse> signIn(@Valid @RequestBody AuthDto.SignInRequest form) {
+        SignInResponse token = authService.signIn(form);
 
+        // 토큰을 헤더에 넣어서 반환
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, JwtFilter.AUTHORIZATION_HEADER_PREFIX + tokenDto.getToken());
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, JwtFilter.AUTHORIZATION_HEADER_PREFIX + token.getToken());
 
-        return ResponseEntity.ok().headers(httpHeaders).body(tokenDto);
+        return ResponseEntity.ok().headers(httpHeaders).body(token);
     }
 
 }
