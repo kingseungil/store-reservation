@@ -28,6 +28,7 @@ public class CustomExceptionHandler {
 
 
     // Validation 에러
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error(e.getMessage() + " is occurred", e);
@@ -39,6 +40,7 @@ public class CustomExceptionHandler {
     }
 
     // DB 에러
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ErrorResponse handleDataIntegrityViolationException(DataIntegrityViolationException e) {
         log.error(e.getMessage() + " is occurred", e);

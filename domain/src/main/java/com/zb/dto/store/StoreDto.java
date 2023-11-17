@@ -2,6 +2,7 @@ package com.zb.dto.store;
 
 import com.zb.dto.user.ManagerDto;
 import com.zb.entity.Store;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,14 +16,16 @@ import lombok.Setter;
 @AllArgsConstructor
 public class StoreDto {
 
+    @Size(min = 1, max = 50)
     private String storeName;
     private String location;
+    @Size(min = 1, max = 100)
     private String description;
     private ManagerDto manager;
 
-    public static StoreDto from(Store store) {
+    // entity -> dto
+    public static StoreDto toDto(Store store) {
         ManagerDto managerDto = ManagerDto.builder()
-                                          .id(store.getManager().getManagerId())
                                           .username(store.getManager().getUsername())
                                           .build();
         return StoreDto.builder()
@@ -33,13 +36,13 @@ public class StoreDto {
                        .build();
     }
 
-    public static Store to(StoreDto storeDto) {
+    // dto -> entity
+    public static Store toEntity(StoreDto storeDto) {
 
         return Store.builder()
                     .storeName(storeDto.getStoreName())
                     .location(storeDto.getLocation())
                     .description(storeDto.getDescription())
-                    .manager(ManagerDto.to(storeDto.getManager()))
                     .build();
     }
 

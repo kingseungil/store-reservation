@@ -5,7 +5,6 @@ import static com.zb.type.ErrorCode.NOT_EXISTED_STORE;
 import static com.zb.type.ErrorCode.USER_NOT_FOUND;
 
 import com.zb.dto.store.StoreDto;
-import com.zb.dto.user.ManagerDto;
 import com.zb.entity.Manager;
 import com.zb.entity.Store;
 import com.zb.exception.CustomException;
@@ -42,8 +41,9 @@ public class StoreServiceImpl implements StoreServce {
                                            .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         // 상점 등록
-        storeDto.setManager(ManagerDto.from(manager));
-        storeRepository.save(StoreDto.to(storeDto));
+        Store store = StoreDto.toEntity(storeDto);
+        store.setManager(manager);
+        storeRepository.save(store);
     }
 
     @Override
@@ -73,6 +73,6 @@ public class StoreServiceImpl implements StoreServce {
         Store store = storeRepository.findById(storeId)
                                      .orElseThrow(() -> new CustomException(NOT_EXISTED_STORE));
 
-        return StoreDto.from(store);
+        return StoreDto.toDto(store);
     }
 }

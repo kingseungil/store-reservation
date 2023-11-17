@@ -3,6 +3,7 @@ package com.zb.store.controller;
 import com.zb.annotation.OnlyManager;
 import com.zb.dto.store.StoreDto;
 import com.zb.store.service.StoreServce;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +26,7 @@ public class StoreController {
     @OnlyManager
     @PostMapping("/manager")
     public ResponseEntity<String> registerStore(
-      @RequestBody StoreDto form) {
+      @Valid @RequestBody StoreDto form) {
         storeServce.registerStore(form);
         return ResponseEntity.ok("등록 성공");
     }
