@@ -1,4 +1,4 @@
-package com.zb.dto;
+package com.zb.dto.auth;
 
 import static com.zb.type.UserRole.ROLE_CUSTOMER;
 import static com.zb.type.UserRole.ROLE_MANAGER;

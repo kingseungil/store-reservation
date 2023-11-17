@@ -2,10 +2,10 @@ package com.zb.auth.controller;
 
 import com.zb.auth.jwt.JwtFilter;
 import com.zb.auth.service.AuthService;
-import com.zb.dto.AuthDto;
-import com.zb.dto.AuthDto.SignUpCustomer;
-import com.zb.dto.AuthDto.SignUpManager;
-import com.zb.dto.TokenDto;
+import com.zb.dto.auth.AuthDto;
+import com.zb.dto.auth.AuthDto.SignUpCustomer;
+import com.zb.dto.auth.AuthDto.SignUpManager;
+import com.zb.dto.auth.TokenDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

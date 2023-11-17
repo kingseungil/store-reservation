@@ -7,10 +7,10 @@ import static com.zb.type.UserRole.ROLE_CUSTOMER;
 import static com.zb.type.UserRole.ROLE_MANAGER;
 
 import com.zb.auth.jwt.JwtTokenProvider;
-import com.zb.dto.AuthDto.SignIn;
-import com.zb.dto.AuthDto.SignUpCustomer;
-import com.zb.dto.AuthDto.SignUpManager;
-import com.zb.dto.TokenDto;
+import com.zb.dto.auth.AuthDto.SignIn;
+import com.zb.dto.auth.AuthDto.SignUpCustomer;
+import com.zb.dto.auth.AuthDto.SignUpManager;
+import com.zb.dto.auth.TokenDto;
 import com.zb.entity.Authority;
 import com.zb.entity.Customer;
 import com.zb.entity.Manager;
