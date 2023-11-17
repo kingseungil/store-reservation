@@ -14,6 +14,7 @@ import com.zb.util.SecurityUtil;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class StoreServiceImpl implements StoreServce {
      * @param storeDto 상점 등록 정보
      */
     @Override
+    @Transactional
     public void registerStore(StoreDto storeDto) {
         // 이미 존재하는 상점인지 확인
         storeRepository.findByStoreName(storeDto.getStoreName())
