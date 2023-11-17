@@ -60,7 +60,10 @@ public class StoreServiceImpl implements StoreServce {
 
     @Override
     public List<StoreDto.Response> getStores() {
-        return null;
+        return storeRepository.findAll().stream()
+                              .map(StoreDto.Info::fromEntity)
+                              .map(StoreDto.Response::new)
+                              .toList();
     }
 
     /**
@@ -71,12 +74,9 @@ public class StoreServiceImpl implements StoreServce {
      */
     @Override
     public StoreDto.Response getStore(Long storeId) {
-        // 상점이 존재하는지 확인
-        Store store = storeRepository.findById(storeId)
-                                     .orElseThrow(() -> new CustomException(NOT_EXISTED_STORE));
-
-        return StoreDto.Response.builder()
-                                .info(StoreDto.Info.fromEntity(store))
-                                .build();
+        return storeRepository.findById(storeId)
+                              .map(StoreDto.Info::fromEntity)
+                              .map(StoreDto.Response::new)
+                              .orElseThrow(() -> new CustomException(NOT_EXISTED_STORE));
     }
 }

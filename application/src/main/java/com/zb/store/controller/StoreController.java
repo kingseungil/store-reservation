@@ -4,6 +4,7 @@ import com.zb.annotation.OnlyManager;
 import com.zb.dto.store.StoreDto;
 import com.zb.store.service.StoreServce;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,7 +46,8 @@ public class StoreController {
 
     // 상점 조회
     @GetMapping
-    public void getStores() {
+    public ResponseEntity<List<StoreDto.Response>> getStores() {
+        return ResponseEntity.ok(storeServce.getStores());
     }
 
     // 상점 상세 조회
