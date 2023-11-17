@@ -49,8 +49,9 @@ public class SecurityConfig {
           .authorizeHttpRequests(authorizeRequests -> authorizeRequests
             .requestMatchers("/api/signin").permitAll() // 로그인 api
             .requestMatchers("/api/signup-customer").permitAll() // 회원가입 api
-            .requestMatchers("/api/test").hasRole("CUSTOMER")
             .requestMatchers("/api/signup-manager").permitAll() // 회원가입 api
+            .requestMatchers("/api/store/manager/**").hasRole("MANAGER")
+            .requestMatchers("/api/store/**").permitAll()
             .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll() // swagger
             .anyRequest().authenticated()) // 그 외 인증 없이 접근X
 

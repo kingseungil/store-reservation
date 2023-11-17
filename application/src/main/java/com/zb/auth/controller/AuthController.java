@@ -1,6 +1,5 @@
 package com.zb.auth.controller;
 
-import com.zb.annotation.OnlyCustomer;
 import com.zb.auth.jwt.JwtFilter;
 import com.zb.auth.service.AuthService;
 import com.zb.dto.AuthDto;
@@ -12,7 +11,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,12 +62,6 @@ public class AuthController {
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, JwtFilter.AUTHORIZATION_HEADER_PREFIX + tokenDto.getToken());
 
         return ResponseEntity.ok().headers(httpHeaders).body(tokenDto);
-    }
-
-    @GetMapping("/test")
-    @OnlyCustomer
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("test");
     }
 
 }
