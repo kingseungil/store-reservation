@@ -26,7 +26,7 @@ public class StoreController {
     @OnlyManager
     @PostMapping("/manager")
     public ResponseEntity<String> registerStore(
-      @Valid @RequestBody StoreDto form) {
+      @Valid @RequestBody StoreDto.Request form) {
         storeServce.registerStore(form);
         return ResponseEntity.ok("등록 성공");
     }
@@ -50,7 +50,7 @@ public class StoreController {
 
     // 상점 상세 조회
     @GetMapping("/{storeId}")
-    public ResponseEntity<StoreDto> getStore(
+    public ResponseEntity<StoreDto.Response> getStore(
       @PathVariable("storeId") Long storeId) {
         return ResponseEntity.ok(storeServce.getStore(storeId));
     }

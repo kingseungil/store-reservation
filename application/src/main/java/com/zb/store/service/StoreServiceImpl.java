@@ -26,13 +26,13 @@ public class StoreServiceImpl implements StoreServce {
     /**
      * 상점 등록
      *
-     * @param storeDto 상점 등록 정보
+     * @param form 상점 등록 정보
      */
     @Override
     @Transactional
-    public void registerStore(StoreDto storeDto) {
+    public void registerStore(StoreDto.Request form) {
         // 이미 존재하는 상점인지 확인
-        storeRepository.findByStoreName(storeDto.getStoreName())
+        storeRepository.findByStoreName(form.getStoreName())
                        .ifPresent(store -> {
                            throw new CustomException(ALREADY_EXISTED_STORE);
                        });
@@ -43,13 +43,13 @@ public class StoreServiceImpl implements StoreServce {
                                            .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         // 상점 등록
-        Store store = StoreDto.toEntity(storeDto);
+        Store store = StoreDto.Request.toEntity(form);
         store.setManager(manager);
         storeRepository.save(store);
     }
 
     @Override
-    public void updateStore(StoreDto storeDto) {
+    public void updateStore(StoreDto.Request form) {
 
     }
 
@@ -59,7 +59,7 @@ public class StoreServiceImpl implements StoreServce {
     }
 
     @Override
-    public List<StoreDto> getStores() {
+    public List<StoreDto.Response> getStores() {
         return null;
     }
 
@@ -70,11 +70,13 @@ public class StoreServiceImpl implements StoreServce {
      * @return 상점 상세 정보
      */
     @Override
-    public StoreDto getStore(Long storeId) {
+    public StoreDto.Response getStore(Long storeId) {
         // 상점이 존재하는지 확인
         Store store = storeRepository.findById(storeId)
                                      .orElseThrow(() -> new CustomException(NOT_EXISTED_STORE));
 
-        return StoreDto.toDto(store);
+        return StoreDto.Response.builder()
+                                .info(StoreDto.Info.fromEntity(store))
+                                .build();
     }
 }

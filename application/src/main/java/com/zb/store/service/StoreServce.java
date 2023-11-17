@@ -5,14 +5,14 @@ import java.util.List;
 
 public interface StoreServce {
 
-    void registerStore(StoreDto storeDto);
+    void registerStore(StoreDto.Request storeDto);
 
-    void updateStore(StoreDto storeDto);
+    void updateStore(StoreDto.Request storeDto);
 
     void deleteStore(Long storeId);
 
-    List<StoreDto> getStores();
+    List<StoreDto.Response> getStores();
 
-    StoreDto getStore(Long storeId);
+    StoreDto.Response getStore(Long storeId);
 
 }
