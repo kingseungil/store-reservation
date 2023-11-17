@@ -58,6 +58,11 @@ public class StoreServiceImpl implements StoreServce {
 
     }
 
+    /**
+     * 전체 상점 조회
+     *
+     * @return 상점 목록
+     */
     @Override
     public List<StoreDto.Response> getStores() {
         return storeRepository.findAll().stream()
