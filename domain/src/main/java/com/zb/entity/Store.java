@@ -1,6 +1,8 @@
 package com.zb.entity;
 
 
+import com.zb.dto.store.StoreDto;
+import com.zb.dto.user.ManagerDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -41,4 +43,30 @@ public class Store extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "manager_id")
     private Manager manager;
+
+    // from
+    public static Store from(StoreDto.Request form, Manager manager) {
+        return Store.builder()
+                    .storeName(form.getStoreName())
+                    .location(form.getLocation())
+                    .description(form.getDescription())
+                    .manager(manager)
+                    .build();
+    }
+
+    // to
+    public static StoreDto.Info to(Store store) {
+        return StoreDto.Info.builder()
+                            .storeName(store.getStoreName())
+                            .location(store.getLocation())
+                            .description(store.getDescription())
+                            .manager(ManagerDto.from(store.getManager().getUsername()))
+                            .build();
+    }
+
+    public void updateStore(StoreDto.Request form) {
+        this.storeName = form.getStoreName();
+        this.location = form.getLocation();
+        this.description = form.getDescription();
+    }
 }

@@ -34,15 +34,23 @@ public class StoreController {
 
     // 상점 수정
     @OnlyManager
-    @PutMapping("/manager")
-    public void updateStore() {
+    @PutMapping("/manager/{storeId}")
+    public ResponseEntity<String> updateStore(
+      @PathVariable("storeId") Long storeId,
+      @Valid @RequestBody StoreDto.Request form) {
+        storeServce.updateStore(form, storeId);
+        return ResponseEntity.ok("수정 성공");
     }
 
     // 상점 삭제
     @OnlyManager
-    @DeleteMapping("/manager")
-    public void deleteStore() {
+    @DeleteMapping("/manager/{storeId}")
+    public ResponseEntity<String> deleteStore(
+      @PathVariable("storeId") Long storeId) {
+        storeServce.deleteStore(storeId);
+        return ResponseEntity.ok("삭제 성공");
     }
+
 
     // 상점 조회
     @GetMapping

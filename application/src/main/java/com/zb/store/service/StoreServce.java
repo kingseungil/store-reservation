@@ -7,7 +7,7 @@ public interface StoreServce {
 
     void registerStore(StoreDto.Request storeDto);
 
-    void updateStore(StoreDto.Request storeDto);
+    void updateStore(StoreDto.Request storeDto, Long storeId);
 
     void deleteStore(Long storeId);
 

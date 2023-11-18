@@ -24,7 +24,8 @@ public enum ErrorCode {
 
     // store
     ALREADY_EXISTED_STORE("이미 존재하는 상점입니다."),
-    NOT_EXISTED_STORE("존재하지 않는 상점입니다.");
+    NOT_EXISTED_STORE("존재하지 않는 상점입니다."),
+    NOT_OWNER_STORE("상점의 소유자가 아닙니다.");
 
     private final String description;
 }
