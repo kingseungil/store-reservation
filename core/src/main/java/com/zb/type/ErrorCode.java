@@ -20,7 +20,12 @@ public enum ErrorCode {
     UNAUTHORIZED("인증되지 않은 사용자입니다."),
     INVALID_TOKEN("유효하지 않은 토큰입니다."),
     EXPIRED_TOKEN("만료된 토큰입니다."),
-    EMPTY_TOKEN("토큰이 존재하지 않습니다.");
+    EMPTY_TOKEN("토큰이 존재하지 않습니다."),
+
+    // store
+    ALREADY_EXISTED_STORE("이미 존재하는 상점입니다."),
+    NOT_EXISTED_STORE("존재하지 않는 상점입니다."),
+    NOT_OWNER_STORE("상점의 소유자가 아닙니다.");
 
     private final String description;
 }

@@ -1,18 +1,16 @@
 package com.zb.auth.controller;
 
-import com.zb.annotation.OnlyCustomer;
 import com.zb.auth.jwt.JwtFilter;
 import com.zb.auth.service.AuthService;
-import com.zb.dto.AuthDto;
-import com.zb.dto.AuthDto.SignUpCustomer;
-import com.zb.dto.AuthDto.SignUpManager;
-import com.zb.dto.TokenDto;
+import com.zb.dto.auth.AuthDto;
+import com.zb.dto.auth.AuthDto.SignIn;
+import com.zb.dto.auth.AuthDto.SignUpCustomer;
+import com.zb.dto.auth.AuthDto.SignUpManager;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +31,8 @@ public class AuthController {
      * @return 회원가입 결과
      */
     @PostMapping("/signup-customer")
-    public ResponseEntity<SignUpCustomer> signUpCustomer(
-      @Valid @RequestBody AuthDto.SignUpCustomer form) {
+    public ResponseEntity<SignUpCustomer.Response> signUpCustomer(
+      @Valid @RequestBody AuthDto.SignUpCustomer.Request form) {
         return ResponseEntity.ok(authService.signUpCustomer(form));
     }
 
@@ -45,8 +43,8 @@ public class AuthController {
      * @return 회원가입 결과
      */
     @PostMapping("/signup-manager")
-    public ResponseEntity<SignUpManager> signUpManager(
-      @Valid @RequestBody AuthDto.SignUpManager form) {
+    public ResponseEntity<SignUpManager.Response> signUpManager(
+      @Valid @RequestBody AuthDto.SignUpManager.Request form) {
         return ResponseEntity.ok(authService.signUpManager(form));
     }
 
@@ -57,19 +55,14 @@ public class AuthController {
      * @return 토큰
      */
     @PostMapping("/signin")
-    public ResponseEntity<TokenDto> signIn(@Valid @RequestBody AuthDto.SignIn form) {
-        TokenDto tokenDto = authService.signIn(form);
+    public ResponseEntity<SignIn.Response> signIn(@Valid @RequestBody AuthDto.SignIn.Request form) {
+        SignIn.Response token = authService.signIn(form);
 
+        // 토큰을 헤더에 넣어서 반환
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, JwtFilter.AUTHORIZATION_HEADER_PREFIX + tokenDto.getToken());
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, JwtFilter.AUTHORIZATION_HEADER_PREFIX + token.getToken());
 
-        return ResponseEntity.ok().headers(httpHeaders).body(tokenDto);
-    }
-
-    @GetMapping("/test")
-    @OnlyCustomer
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("test");
+        return ResponseEntity.ok().headers(httpHeaders).body(token);
     }
 
 }
