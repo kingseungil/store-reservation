@@ -1,7 +1,6 @@
 package com.zb.auth.service;
 
 import static com.zb.type.ErrorCode.ALREADY_EXISTED_USER;
-import static com.zb.type.ErrorCode.NOT_SUPPORTED_USER_TYPE;
 import static com.zb.type.ErrorCode.UNMATCHED_PASSWORD;
 import static com.zb.type.UserRole.ROLE_CUSTOMER;
 import static com.zb.type.UserRole.ROLE_MANAGER;
@@ -16,6 +15,7 @@ import com.zb.entity.Manager;
 import com.zb.exception.CustomException;
 import com.zb.repository.CustomerRepository;
 import com.zb.repository.ManagerRepository;
+import com.zb.type.UserRole;
 import com.zb.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -33,8 +33,8 @@ public class AuthService {
     private final ManagerRepository managerRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final CustomerUserDetailsService customerUserDetailsService;
-    private final ManagerUserDetailsService managerUserDetailsService;
+    private final UserDetailServiceSelector userDetailServiceSelector;
+
 
     /**
      * 고객 회원가입
@@ -53,9 +53,7 @@ public class AuthService {
             throw new CustomException(ALREADY_EXISTED_USER);
         }
 
-        Authority authority = Authority.builder()
-                                       .authorityName(ROLE_CUSTOMER)
-                                       .build();
+        Authority authority = createAuthority(ROLE_CUSTOMER);
 
         Customer customer = Customer.builder()
                                     .username(form.getUsername())
@@ -72,6 +70,7 @@ public class AuthService {
                                       .authority(customer.getAuthority().getAuthorityName())
                                       .build();
     }
+
 
     /**
      * 매니저(상점) 회원가입
@@ -90,9 +89,7 @@ public class AuthService {
             throw new CustomException(ALREADY_EXISTED_USER);
         }
 
-        Authority authority = Authority.builder()
-                                       .authorityName(ROLE_MANAGER)
-                                       .build();
+        Authority authority = createAuthority(ROLE_MANAGER);
 
         Manager manager = Manager.builder()
                                  .username(form.getUsername())
@@ -130,12 +127,18 @@ public class AuthService {
 
         // SecurityContextHolder에 인증 정보를 저장
         Authentication authentication = SecurityUtil.authenticate(userDetails);
-        
+
         String jwt = jwtTokenProvider.createToken(authentication);
 
         return SignIn.Response.builder()
                               .token(jwt)
                               .build();
+    }
+
+    private static Authority createAuthority(UserRole userRole) {
+        return Authority.builder()
+                        .authorityName(userRole)
+                        .build();
     }
 
     private void checkPassword(SignIn.Request form, UserDetails userDetails) {
@@ -145,15 +148,7 @@ public class AuthService {
     }
 
     private UserDetails getUserDetails(SignIn.Request form) {
-        UserDetailsService userDetailsService;
-        if (ROLE_CUSTOMER.equals(form.getUserRole())) {
-            userDetailsService = customerUserDetailsService;
-        } else if (ROLE_MANAGER.equals(form.getUserRole())) {
-            userDetailsService = managerUserDetailsService;
-        } else {
-            throw new CustomException(NOT_SUPPORTED_USER_TYPE);
-        }
-
+        UserDetailsService userDetailsService = userDetailServiceSelector.select(form.getUserRole());
         return userDetailsService.loadUserByUsername(form.getUsername());
     }
 }
