@@ -28,7 +28,10 @@ public enum ErrorCode {
     NOT_OWNER_STORE("상점의 소유자가 아닙니다."),
 
     // reservation
-    NOT_EXISTED_RESERVATION("존재하지 않는 예약입니다.");
+    NOT_EXISTED_RESERVATION("존재하지 않는 예약입니다."),
+    NOT_RESERVATION_OWNER("예약의 소유자가 아닙니다."),
+    ALREADY_CANCELED_RESERVATION("이미 취소된 예약입니다."),
+    ALREADY_ARRIVED_RESERVATION("이미 완료된 예약입니다.");
 
     private final String description;
 }

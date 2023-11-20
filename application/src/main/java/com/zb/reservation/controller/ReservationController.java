@@ -43,10 +43,11 @@ public class ReservationController {
 
     @PatchMapping("/customer/{reservationId}/cancel")
     @OnlyCustomer
-    public void cancelReservation(
+    public ResponseEntity<String> cancelReservation(
       @PathVariable Long reservationId
     ) {
         reservationService.cancelReservation(reservationId);
+        return ResponseEntity.ok("예약이 취소되었습니다.");
     }
 
     /* 매니저용 */

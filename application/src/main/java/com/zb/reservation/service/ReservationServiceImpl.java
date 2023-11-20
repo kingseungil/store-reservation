@@ -2,6 +2,7 @@ package com.zb.reservation.service;
 
 import static com.zb.type.ErrorCode.NOT_EXISTED_RESERVATION;
 import static com.zb.type.ErrorCode.NOT_EXISTED_STORE;
+import static com.zb.type.ErrorCode.NOT_RESERVATION_OWNER;
 import static com.zb.type.ErrorCode.USER_NOT_FOUND;
 
 import com.zb.dto.reservation.ReservationDto;
@@ -16,6 +17,7 @@ import com.zb.repository.StoreRepository;
 import com.zb.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +37,7 @@ public class ReservationServiceImpl implements ReservationService {
      * @param form    예약 정보
      */
     @Override
+    @Transactional
     public void reserve(Long storeId, ReservationDto.Request form) {
         // 현재 로그인한 고객 조회
         Customer customer = getLoggedInCustomer();
@@ -46,12 +49,38 @@ public class ReservationServiceImpl implements ReservationService {
         reservationRepository.save(reservation);
     }
 
+    /**
+     * 예약 조회 (예약 ID로)
+     *
+     * @param reservationId 예약 ID
+     * @return 예약 정보
+     */
     @Override
     public ReservationDto.Response getReservationByReservationId(Long reservationId) {
         return reservationRepository.findById(reservationId)
                                     .map(Reservation::to)
                                     .map(ReservationDto.Response::new)
                                     .orElseThrow(() -> new CustomException(NOT_EXISTED_RESERVATION));
+    }
+
+    /**
+     * 예약 취소
+     *
+     * @param reservationId 예약 ID
+     */
+    @Override
+    @Transactional
+    public void cancelReservation(Long reservationId) {
+        // 자신의 예약인지 확인
+        Reservation dbReservation = reservationRepository.findById(reservationId)
+                                                         .filter(reservation -> reservation.getCustomer()
+                                                                                           .getUsername()
+                                                                                           .equals(
+                                                                                             SecurityUtil.getCurrentUsername()))
+                                                         .orElseThrow(() -> new CustomException(NOT_RESERVATION_OWNER));
+
+        // 예약 취소
+        dbReservation.cancel();
     }
 
     /* 매니저용 */
@@ -61,11 +90,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     }
 
-
-    @Override
-    public void cancelReservation(Long reservationId) {
-
-    }
 
     @Override
     public void acceptReservation(Long reservationId) {

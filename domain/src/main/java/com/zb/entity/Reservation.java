@@ -1,7 +1,11 @@
 package com.zb.entity;
 
+import static com.zb.type.ErrorCode.ALREADY_ARRIVED_RESERVATION;
+import static com.zb.type.ErrorCode.ALREADY_CANCELED_RESERVATION;
+
 import com.zb.dto.reservation.ReservationDto;
 import com.zb.dto.user.CustomerDto;
+import com.zb.exception.CustomException;
 import com.zb.type.ReservationStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -68,5 +72,20 @@ public class Reservation extends BaseEntity {
                                   .location(reservation.getStore().getLocation())
                                   .status(reservation.getStatus())
                                   .build();
+    }
+
+    // cancel
+    public void cancel() {
+        // 이미 취소된 예약인지 확인
+        if (this.status == ReservationStatus.CANCELED) {
+            throw new CustomException(ALREADY_CANCELED_RESERVATION);
+        }
+
+        // ARRIVED 상태인지 확인
+        if (this.status == ReservationStatus.ARRIVED) {
+            throw new CustomException(ALREADY_ARRIVED_RESERVATION);
+        }
+
+        this.status = ReservationStatus.CANCELED;
     }
 }
