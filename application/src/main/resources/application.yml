@@ -3,7 +3,6 @@ spring:
     include:
       - datasource
       - log
-      - kafka
 
 springdoc:
   swagger-ui:
