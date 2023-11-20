@@ -1,7 +1,6 @@
 package com.zb.entity;
 
-import static com.zb.type.ErrorCode.ALREADY_ARRIVED_RESERVATION;
-import static com.zb.type.ErrorCode.ALREADY_CANCELED_RESERVATION;
+import static com.zb.type.ErrorCode.DONT_CHANGE_RESERVATION_STATUS;
 
 import com.zb.dto.reservation.ReservationDto;
 import com.zb.dto.user.CustomerDto;
@@ -43,7 +42,7 @@ public class Reservation extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private ReservationStatus status = ReservationStatus.PENDING; // default
+    private ReservationStatus status;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
@@ -76,16 +75,27 @@ public class Reservation extends BaseEntity {
 
     // cancel
     public void cancel() {
-        // 이미 취소된 예약인지 확인
-        if (this.status == ReservationStatus.CANCELED) {
-            throw new CustomException(ALREADY_CANCELED_RESERVATION);
-        }
-
-        // ARRIVED 상태인지 확인
-        if (this.status == ReservationStatus.ARRIVED) {
-            throw new CustomException(ALREADY_ARRIVED_RESERVATION);
-        }
-
+        checkStatus(ReservationStatus.CANCELED, ReservationStatus.ARRIVED);
         this.status = ReservationStatus.CANCELED;
+    }
+
+    // accept
+    public void accept() {
+        checkStatus(ReservationStatus.CANCELED, ReservationStatus.ARRIVED, ReservationStatus.ACCEPTED);
+        this.status = ReservationStatus.ACCEPTED;
+    }
+
+    // reject
+    public void reject() {
+        checkStatus(ReservationStatus.CANCELED, ReservationStatus.ARRIVED, ReservationStatus.REJECTED);
+        this.status = ReservationStatus.REJECTED;
+    }
+
+    private void checkStatus(ReservationStatus... invalidStatuses) {
+        for (ReservationStatus invalidStatus : invalidStatuses) {
+            if (this.status == invalidStatus) {
+                throw new CustomException(DONT_CHANGE_RESERVATION_STATUS);
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.zb.dto.reservation;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.zb.dto.user.CustomerDto;
 import com.zb.type.ReservationStatus;
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ public class ReservationDto {
 
     public static class Request {
 
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
         private LocalDateTime reservationDate;
 
     }

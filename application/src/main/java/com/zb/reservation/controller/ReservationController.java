@@ -60,20 +60,22 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.getReservationsByStoreId(storeId));
     }
 
-    @PatchMapping("/manager/{reservationId}/reject")
+    @PatchMapping("/manager/reject/{reservationId}")
     @OnlyManager
-    public void rejectReservation(
+    public ResponseEntity<String> rejectReservation(
       @PathVariable Long reservationId
     ) {
         reservationService.rejectReservation(reservationId);
+        return ResponseEntity.ok("예약을 거절하였습니다.");
     }
 
-    @PatchMapping("/manager/{reservationId}/accept")
+    @PatchMapping("/manager/accept/{reservationId}")
     @OnlyManager
-    public void acceptReservation(
+    public ResponseEntity<String> acceptReservation(
       @PathVariable Long reservationId
     ) {
         reservationService.acceptReservation(reservationId);
+        return ResponseEntity.ok("예약을 수락하였습니다.");
     }
 
 

@@ -30,8 +30,11 @@ public enum ErrorCode {
     // reservation
     NOT_EXISTED_RESERVATION("존재하지 않는 예약입니다."),
     NOT_RESERVATION_OWNER("예약의 소유자가 아닙니다."),
-    ALREADY_CANCELED_RESERVATION("이미 취소된 예약입니다."),
-    ALREADY_ARRIVED_RESERVATION("이미 완료된 예약입니다.");
+    ALREADY_EXISTED_RESERVATION("이미 존재하는 예약입니다."),
+    //    ALREADY_CANCELED_RESERVATION("이미 취소된 예약입니다."),
+//    ALREADY_ARRIVED_RESERVATION("이미 완료된 예약입니다."),
+//    ALREADY_REJECTED_RESERVATION("이미 거절된 예약입니다."),
+    DONT_CHANGE_RESERVATION_STATUS("예약 상태를 변경할 수 없습니다.");
 
     private final String description;
 }
