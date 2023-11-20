@@ -52,6 +52,8 @@ public class SecurityConfig {
             .requestMatchers("/api/signup-manager").permitAll() // 회원가입 api
             .requestMatchers("/api/store/manager/**").hasRole("MANAGER")
             .requestMatchers("/api/store/**").permitAll()
+            .requestMatchers("/api/reservation/customer/**").hasRole("CUSTOMER")
+            .requestMatchers("/api/reservation/manager/**").hasRole("MANAGER")
             .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll() // swagger
             .anyRequest().authenticated()) // 그 외 인증 없이 접근X
 

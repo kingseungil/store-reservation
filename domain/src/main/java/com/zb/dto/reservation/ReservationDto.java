@@ -1,25 +1,25 @@
-package com.zb.dto.store;
+package com.zb.dto.reservation;
 
-import com.zb.dto.user.ManagerDto;
-import jakarta.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.zb.dto.user.CustomerDto;
+import com.zb.type.ReservationStatus;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-public class StoreDto {
+public class ReservationDto {
 
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
+
     public static class Request {
 
-        @Size(min = 1, max = 50)
-        private String storeName;
-        private String location;
-        @Size(min = 1, max = 100)
-        private String description;
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+        private LocalDateTime reservationDate;
 
     }
 
@@ -29,10 +29,12 @@ public class StoreDto {
     @Builder
     public static class Info {
 
+        private LocalDateTime reservationDate;
+        private CustomerDto customer;
         private String storeName;
         private String location;
-        private String description;
-        private ManagerDto manager;
+        private ReservationStatus status;
+
     }
 
     @Getter
@@ -41,7 +43,7 @@ public class StoreDto {
     @Builder
     public static class Response {
 
-        private Info info;
+        private ReservationDto.Info info;
     }
 
 }

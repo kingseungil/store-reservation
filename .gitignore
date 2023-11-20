@@ -38,6 +38,7 @@ out/
 
 mysql-data
 redis-data
+kafka-data**
 logs
 
 **/env.properties

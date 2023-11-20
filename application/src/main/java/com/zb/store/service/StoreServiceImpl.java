@@ -36,7 +36,7 @@ public class StoreServiceImpl implements StoreServce {
         // 이미 존재하는 상점인지 확인
         checkStore(form);
         // 현재 로그인한 매니저 조회
-        Manager manager = geLoggedInManager();
+        Manager manager = getLoggedInManager();
         // 상점 등록
         Store store = Store.from(form, manager);
         storeRepository.save(store);
@@ -74,7 +74,7 @@ public class StoreServiceImpl implements StoreServce {
     @Override
     @Transactional(readOnly = true)
     public List<StoreDto.Response> getStores() {
-        return storeRepository.findAll().stream()
+        return storeRepository.findAllWithManager().stream()
                               .map(Store::to)
                               .map(StoreDto.Response::new)
                               .toList();
@@ -117,7 +117,7 @@ public class StoreServiceImpl implements StoreServce {
         return store;
     }
 
-    private Manager geLoggedInManager() {
+    private Manager getLoggedInManager() {
         String currentUsername = SecurityUtil.getCurrentUsername();
 
         return managerRepository.findByUsername(currentUsername)
