@@ -4,6 +4,7 @@ import com.zb.auth.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -52,6 +53,12 @@ public class SecurityConfig {
             .requestMatchers("/api/signup-manager").permitAll() // 회원가입 api
             .requestMatchers("/api/store/manager/**").hasRole("MANAGER")
             .requestMatchers("/api/store/**").permitAll()
+            .requestMatchers(HttpMethod.PATCH, "/api/reservation/{reservationId}/reject")
+            .hasRole("MANAGER") // 예약 거절 api
+            .requestMatchers(HttpMethod.PATCH, "/api/reservation/{reservationId}/accept")
+            .hasRole("MANAGER") // 예약 승인 api
+            .requestMatchers(HttpMethod.PATCH, "/api/reservation/{reservationId}/cancel")
+            .hasRole("CUSTOMER") // 예약 취소 api
             .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll() // swagger
             .anyRequest().authenticated()) // 그 외 인증 없이 접근X
 

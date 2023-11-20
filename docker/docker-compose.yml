@@ -50,6 +50,8 @@ services:
       - KAFKA_CFG_NODE_ID=1
       - KAFKA_ENABLE_KRAFT=yes
       - TZ=Asia/Seoul
+    volumes:
+      - ../kafka-data:/bitnami/kafka
 
 networks:
   store-network:
