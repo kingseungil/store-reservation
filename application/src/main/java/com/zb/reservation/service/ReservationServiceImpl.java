@@ -15,6 +15,7 @@ import com.zb.repository.ManagerRepository;
 import com.zb.repository.ReservationRepository;
 import com.zb.repository.StoreRepository;
 import com.zb.util.SecurityUtil;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +46,7 @@ public class ReservationServiceImpl implements ReservationService {
         Store store = storeRepository.findById(storeId)
                                      .orElseThrow(() -> new CustomException(NOT_EXISTED_STORE));
         // 상점 예약
+        // TODO : 기간에 대한 유효성 검사
         Reservation reservation = Reservation.from(form, customer, store);
         reservationRepository.save(reservation);
     }
@@ -56,6 +58,7 @@ public class ReservationServiceImpl implements ReservationService {
      * @return 예약 정보
      */
     @Override
+    @Transactional(readOnly = true)
     public ReservationDto.Response getReservationByReservationId(Long reservationId) {
         return reservationRepository.findById(reservationId)
                                     .map(Reservation::to)
@@ -86,8 +89,12 @@ public class ReservationServiceImpl implements ReservationService {
     /* 매니저용 */
 
     @Override
-    public void getReservationByStoreId(Long storeId) {
-
+    @Transactional(readOnly = true)
+    public List<ReservationDto.Response> getReservationsByStoreId(Long storeId) {
+        return reservationRepository.findAllByStoreId(storeId).stream()
+                                    .map(Reservation::to)
+                                    .map(ReservationDto.Response::new)
+                                    .toList();
     }
 
 

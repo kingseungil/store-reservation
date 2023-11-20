@@ -74,7 +74,7 @@ public class StoreServiceImpl implements StoreServce {
     @Override
     @Transactional(readOnly = true)
     public List<StoreDto.Response> getStores() {
-        return storeRepository.findAll().stream()
+        return storeRepository.findAllWithManager().stream()
                               .map(Store::to)
                               .map(StoreDto.Response::new)
                               .toList();

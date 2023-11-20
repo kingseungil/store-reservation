@@ -5,6 +5,7 @@ import com.zb.annotation.OnlyManager;
 import com.zb.dto.reservation.ReservationDto;
 import com.zb.reservation.service.ReservationService;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,11 +54,10 @@ public class ReservationController {
     /* 매니저용 */
     @GetMapping("/manager/{storeId}")
     @OnlyManager
-    public ResponseEntity<ReservationDto.Response> getReservation(
+    public ResponseEntity<List<ReservationDto.Response>> getReservations(
       @PathVariable Long storeId
     ) {
-        reservationService.getReservationByStoreId(storeId);
-        return null;
+        return ResponseEntity.ok(reservationService.getReservationsByStoreId(storeId));
     }
 
     @PatchMapping("/manager/{reservationId}/reject")

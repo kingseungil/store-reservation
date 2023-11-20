@@ -1,12 +1,13 @@
 package com.zb.reservation.service;
 
 import com.zb.dto.reservation.ReservationDto;
+import java.util.List;
 
 public interface ReservationService {
 
     void reserve(Long storeId, ReservationDto.Request form);
 
-    void getReservationByStoreId(Long storeId);
+    List<ReservationDto.Response> getReservationsByStoreId(Long storeId);
 
     ReservationDto.Response getReservationByReservationId(Long reservationId);
 
