@@ -42,13 +42,22 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.getReservationByReservationId(reservationId));
     }
 
-    @PatchMapping("/customer/{reservationId}/cancel")
+    @PatchMapping("/customer/cancel/{reservationId}")
     @OnlyCustomer
     public ResponseEntity<String> cancelReservation(
       @PathVariable Long reservationId
     ) {
         reservationService.cancelReservation(reservationId);
         return ResponseEntity.ok("예약이 취소되었습니다.");
+    }
+
+    @PatchMapping("/customer/arrive/{reservationId}")
+    @OnlyCustomer
+    public ResponseEntity<String> arriveReservation(
+      @PathVariable Long reservationId
+    ) {
+        reservationService.arriveReservation(reservationId);
+        return ResponseEntity.ok("도착 완료되었습니다");
     }
 
     /* 매니저용 */

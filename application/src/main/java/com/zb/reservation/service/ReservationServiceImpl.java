@@ -91,6 +91,26 @@ public class ReservationServiceImpl implements ReservationService {
         dbReservation.cancel();
     }
 
+    /**
+     * 도착 처리
+     *
+     * @param reservationId 예약 ID
+     */
+    @Override
+    @Transactional
+    public void arriveReservation(Long reservationId) {
+        // 자신의 예약인지 확인
+        Reservation dbReseravtion = reservationRepository.findById(reservationId)
+                                                         .filter(reservation -> reservation.getCustomer()
+                                                                                           .getUsername()
+                                                                                           .equals(
+                                                                                             SecurityUtil.getCurrentUsername()))
+                                                         .orElseThrow(() -> new CustomException(NOT_RESERVATION_OWNER));
+
+        // 예약 도착 처리
+        dbReseravtion.arrive();
+    }
+
     /* 매니저용 */
 
     /**
@@ -139,6 +159,7 @@ public class ReservationServiceImpl implements ReservationService {
         dbReservation.reject();
 
     }
+
 
     private Reservation getMyStoreReservation(Long reservationId) {
         return reservationRepository.findById(reservationId)

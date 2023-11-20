@@ -91,6 +91,12 @@ public class Reservation extends BaseEntity {
         this.status = ReservationStatus.REJECTED;
     }
 
+    // arrive
+    public void arrive() {
+        checkStatus(ReservationStatus.PENDING, ReservationStatus.CANCELED, ReservationStatus.ARRIVED);
+        this.status = ReservationStatus.ARRIVED;
+    }
+
     private void checkStatus(ReservationStatus... invalidStatuses) {
         for (ReservationStatus invalidStatus : invalidStatuses) {
             if (this.status == invalidStatus) {

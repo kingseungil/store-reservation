@@ -17,4 +17,6 @@ public interface ReservationService {
 
     void rejectReservation(Long reservationId);
 
+    void arriveReservation(Long reservationId);
+
 }
