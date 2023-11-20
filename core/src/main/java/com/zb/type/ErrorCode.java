@@ -34,7 +34,8 @@ public enum ErrorCode {
     //    ALREADY_CANCELED_RESERVATION("이미 취소된 예약입니다."),
 //    ALREADY_ARRIVED_RESERVATION("이미 완료된 예약입니다."),
 //    ALREADY_REJECTED_RESERVATION("이미 거절된 예약입니다."),
-    DONT_CHANGE_RESERVATION_STATUS("예약 상태를 변경할 수 없습니다.");
+    DONT_CHANGE_RESERVATION_STATUS("예약 상태를 변경할 수 없습니다."),
+    NOT_ARRIVE_TIME("도착 시간이 아닙니다. 10분 전부터 진행할 수 있습니다.");
 
     private final String description;
 }

@@ -1,6 +1,7 @@
 package com.zb.entity;
 
 import static com.zb.type.ErrorCode.DONT_CHANGE_RESERVATION_STATUS;
+import static com.zb.type.ErrorCode.NOT_ARRIVE_TIME;
 
 import com.zb.dto.reservation.ReservationDto;
 import com.zb.dto.user.CustomerDto;
@@ -94,6 +95,13 @@ public class Reservation extends BaseEntity {
     // arrive
     public void arrive() {
         checkStatus(ReservationStatus.PENDING, ReservationStatus.CANCELED, ReservationStatus.ARRIVED);
+
+        // 현재 시간과 예약 시간 비교
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isBefore(this.reservationDate.minusMinutes(10)) || now.isAfter(this.reservationDate)) {
+            throw new CustomException(NOT_ARRIVE_TIME);
+        }
+
         this.status = ReservationStatus.ARRIVED;
     }
 
