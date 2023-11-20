@@ -94,7 +94,8 @@ public class Reservation extends BaseEntity {
 
     // arrive
     public void arrive() {
-        checkStatus(ReservationStatus.PENDING, ReservationStatus.CANCELED, ReservationStatus.ARRIVED);
+        checkStatus(ReservationStatus.PENDING, ReservationStatus.CANCELED, ReservationStatus.REJECTED,
+          ReservationStatus.ARRIVED);
 
         // 현재 시간과 예약 시간 비교
         LocalDateTime now = LocalDateTime.now();
