@@ -1,7 +1,8 @@
 package com.zb.entity;
 
 import com.zb.dto.reservation.ReservationDto;
-import com.zb.type.ResevationStatus;
+import com.zb.dto.user.CustomerDto;
+import com.zb.type.ReservationStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -38,7 +39,7 @@ public class Reservation extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private ResevationStatus status = ResevationStatus.PENDING; // default
+    private ReservationStatus status = ReservationStatus.PENDING; // default
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
@@ -52,9 +53,20 @@ public class Reservation extends BaseEntity {
     public static Reservation from(ReservationDto.Request form, Customer customer, Store store) {
         return Reservation.builder()
                           .reservationDate(form.getReservationDate())
-                          .status(ResevationStatus.PENDING) // default
+                          .status(ReservationStatus.PENDING) // default
                           .customer(customer)
                           .store(store)
                           .build();
+    }
+
+    // to
+    public static ReservationDto.Info to(Reservation reservation) {
+        return ReservationDto.Info.builder()
+                                  .reservationDate(reservation.getReservationDate())
+                                  .customer(CustomerDto.from(reservation.getCustomer().getUsername()))
+                                  .storeName(reservation.getStore().getStoreName())
+                                  .location(reservation.getStore().getLocation())
+                                  .status(reservation.getStatus())
+                                  .build();
     }
 }

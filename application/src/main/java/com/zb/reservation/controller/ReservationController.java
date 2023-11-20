@@ -6,6 +6,7 @@ import com.zb.dto.reservation.ReservationDto;
 import com.zb.reservation.service.ReservationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,24 +22,44 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    @PostMapping("/{storeId}")
+    /* 손님용 */
+    @PostMapping("/customer/{storeId}")
     @OnlyCustomer
-    public void reserve(
+    public ResponseEntity<String> reserve(
       @PathVariable Long storeId,
       @Valid @RequestBody ReservationDto.Request form
     ) {
         reservationService.reserve(storeId, form);
+        return ResponseEntity.ok("예약 성공");
     }
 
-    @GetMapping("/{storeId}")
+    @GetMapping("/customer/{reservationId}")
+    @OnlyCustomer
+    public ResponseEntity<ReservationDto.Response> getReservationByReservationId(
+      @PathVariable Long reservationId
+    ) {
+        return ResponseEntity.ok(reservationService.getReservationByReservationId(reservationId));
+    }
+
+    @PatchMapping("/customer/{reservationId}/cancel")
+    @OnlyCustomer
+    public void cancelReservation(
+      @PathVariable Long reservationId
+    ) {
+        reservationService.cancelReservation(reservationId);
+    }
+
+    /* 매니저용 */
+    @GetMapping("/manager/{storeId}")
     @OnlyManager
-    public void getReservation(
+    public ResponseEntity<ReservationDto.Response> getReservation(
       @PathVariable Long storeId
     ) {
         reservationService.getReservationByStoreId(storeId);
+        return null;
     }
 
-    @PatchMapping("/{reservationId}/reject")
+    @PatchMapping("/manager/{reservationId}/reject")
     @OnlyManager
     public void rejectReservation(
       @PathVariable Long reservationId
@@ -46,7 +67,7 @@ public class ReservationController {
         reservationService.rejectReservation(reservationId);
     }
 
-    @PatchMapping("/{reservationId}/accept")
+    @PatchMapping("/manager/{reservationId}/accept")
     @OnlyManager
     public void acceptReservation(
       @PathVariable Long reservationId
@@ -54,12 +75,5 @@ public class ReservationController {
         reservationService.acceptReservation(reservationId);
     }
 
-    @PatchMapping("/{reservationId}/cancel")
-    @OnlyCustomer
-    public void cancelReservation(
-      @PathVariable Long reservationId
-    ) {
-        reservationService.cancelReservation(reservationId);
-    }
 
 }

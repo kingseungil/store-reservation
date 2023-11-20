@@ -8,6 +8,8 @@ public interface ReservationService {
 
     void getReservationByStoreId(Long storeId);
 
+    ReservationDto.Response getReservationByReservationId(Long reservationId);
+
     void cancelReservation(Long reservationId);
 
     void acceptReservation(Long reservationId);

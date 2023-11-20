@@ -1,5 +1,6 @@
 package com.zb.reservation.service;
 
+import static com.zb.type.ErrorCode.NOT_EXISTED_RESERVATION;
 import static com.zb.type.ErrorCode.NOT_EXISTED_STORE;
 import static com.zb.type.ErrorCode.USER_NOT_FOUND;
 
@@ -25,6 +26,8 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final StoreRepository storeRepository;
 
+    /* 손님용 */
+
     /**
      * 상점 예약
      *
@@ -44,9 +47,20 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    public ReservationDto.Response getReservationByReservationId(Long reservationId) {
+        return reservationRepository.findById(reservationId)
+                                    .map(Reservation::to)
+                                    .map(ReservationDto.Response::new)
+                                    .orElseThrow(() -> new CustomException(NOT_EXISTED_RESERVATION));
+    }
+
+    /* 매니저용 */
+
+    @Override
     public void getReservationByStoreId(Long storeId) {
 
     }
+
 
     @Override
     public void cancelReservation(Long reservationId) {
