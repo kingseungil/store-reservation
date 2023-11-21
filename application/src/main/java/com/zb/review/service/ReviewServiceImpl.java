@@ -2,6 +2,8 @@ package com.zb.review.service;
 
 import static com.zb.type.ErrorCode.NOT_EXISTED_REVIEW;
 import static com.zb.type.ErrorCode.NOT_RESERVATION_OWNER;
+import static com.zb.type.ErrorCode.NOT_REVIEW_OWNER;
+import static com.zb.type.UserRole.ROLE_ADMIN;
 
 import com.zb.dto.review.ReviewDto;
 import com.zb.entity.Customer;
@@ -79,14 +81,19 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public void deleteReview(Long reviewId) {
-        // 자신의 리뷰인지 확인
-        Review dbReview = reviewRepository.findById(reviewId)
-                                          .filter(review -> review.getCustomer().getUsername()
-                                                                  .equals(SecurityUtil.getCurrentUsername()))
-                                          .orElseThrow(() -> new CustomException(NOT_RESERVATION_OWNER));
+        if (SecurityUtil.hasRole(ROLE_ADMIN)) {
+            // 관리자인 경우 바로 리뷰 삭제
+            reviewRepository.deleteById(reviewId);
+        } else {
+            // 자신의 리뷰인지 확인
+            Review dbReview = reviewRepository.findById(reviewId)
+                                              .filter(review -> review.getCustomer().getUsername()
+                                                                      .equals(SecurityUtil.getCurrentUsername()))
+                                              .orElseThrow(() -> new CustomException(NOT_REVIEW_OWNER));
 
-        // 리뷰 삭제
-        reviewRepository.delete(dbReview);
+            // 리뷰 삭제
+            reviewRepository.delete(dbReview);
+        }
     }
 
     /**

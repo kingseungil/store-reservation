@@ -1,6 +1,7 @@
 package com.zb.auth.service;
 
 import static com.zb.type.ErrorCode.NOT_SUPPORTED_USER_TYPE;
+import static com.zb.type.UserRole.ROLE_ADMIN;
 import static com.zb.type.UserRole.ROLE_CUSTOMER;
 import static com.zb.type.UserRole.ROLE_MANAGER;
 
@@ -21,13 +22,13 @@ public class UserDetailServiceSelector {
     ) {
         this.userDetailsServiceMap = Map.of(
           ROLE_CUSTOMER, customerUserDetailsService,
-          ROLE_MANAGER, managerUserDetailsService
+          ROLE_MANAGER, managerUserDetailsService,
+          ROLE_ADMIN, managerUserDetailsService // 일단 admin도 manager로 처리
         );
     }
 
     /**
      * 유저 타입에 따라 UserDetailsService를 선택
-     *
      * @param role 유저 타입
      * @return UserDetailsService 구현체
      */

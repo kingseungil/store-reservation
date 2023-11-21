@@ -18,4 +18,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @EntityGraph(attributePaths = {"customer", "store"})
     @Override
     Optional<Review> findById(Long reviewId);
+
+    @EntityGraph(attributePaths = {"customer", "store"})
+    @Override
+    void deleteById(Long reviewId);
 }
