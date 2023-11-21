@@ -1,5 +1,6 @@
 package com.zb.entity;
 
+import static com.zb.type.ErrorCode.CANNOT_WRITE_REVIEW;
 import static com.zb.type.ErrorCode.DONT_CHANGE_RESERVATION_STATUS;
 import static com.zb.type.ErrorCode.NOT_ARRIVE_TIME;
 import static com.zb.type.ReservationStatus.ACCEPTED;
@@ -110,6 +111,21 @@ public class Reservation extends BaseEntity {
         this.status = ARRIVED;
     }
 
+    // arrived 일때만 리뷰 작성 가능
+    public void checkStatusForReview() {
+        if (this.status != ARRIVED) {
+            throw new CustomException(CANNOT_WRITE_REVIEW);
+        }
+    }
+
+    // 예약자와 리뷰 작성자가 같은지 확인
+    public void checkReservationOwner(Long customerId) {
+        if (!this.customer.getCustomerId().equals(customerId)) {
+            throw new CustomException(CANNOT_WRITE_REVIEW);
+        }
+    }
+
+
     private void checkStatus(ReservationStatus... invalidStatuses) {
         for (ReservationStatus invalidStatus : invalidStatuses) {
             if (this.status == invalidStatus) {
@@ -117,4 +133,5 @@ public class Reservation extends BaseEntity {
             }
         }
     }
+
 }
