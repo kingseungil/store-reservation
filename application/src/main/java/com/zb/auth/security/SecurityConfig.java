@@ -4,6 +4,7 @@ import com.zb.auth.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -54,6 +55,11 @@ public class SecurityConfig {
             .requestMatchers("/api/store/**").permitAll()
             .requestMatchers("/api/reservation/customer/**").hasRole("CUSTOMER")
             .requestMatchers("/api/reservation/manager/**").hasRole("MANAGER")
+            .requestMatchers("/api/review/list/{storeId}").permitAll()
+            .requestMatchers("/api/review/{reviewId}").permitAll()
+            .requestMatchers(HttpMethod.POST, "/api/review/{reservationId}").hasRole("CUSTOMER")
+            .requestMatchers(HttpMethod.PUT, "/api/review/{reservationId}").hasRole("CUSTOMER")
+            .requestMatchers(HttpMethod.DELETE, "/api/review/{reservationId}").hasAnyRole("CUSTOMER", "ADMIN")
             .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll() // swagger
             .anyRequest().authenticated()) // 그 외 인증 없이 접근X
 

@@ -1,10 +1,17 @@
 package com.zb.entity;
 
+import static com.zb.type.ErrorCode.CANNOT_WRITE_REVIEW;
 import static com.zb.type.ErrorCode.DONT_CHANGE_RESERVATION_STATUS;
 import static com.zb.type.ErrorCode.NOT_ARRIVE_TIME;
+import static com.zb.type.ReservationStatus.ACCEPTED;
+import static com.zb.type.ReservationStatus.ARRIVED;
+import static com.zb.type.ReservationStatus.CANCELED;
+import static com.zb.type.ReservationStatus.PENDING;
+import static com.zb.type.ReservationStatus.REJECTED;
 
 import com.zb.dto.reservation.ReservationDto;
-import com.zb.dto.user.CustomerDto;
+import com.zb.dto.store.StoreInfoDto;
+import com.zb.dto.user.CustomerInfoDto;
 import com.zb.exception.CustomException;
 import com.zb.type.ReservationStatus;
 import jakarta.persistence.Column;
@@ -57,7 +64,7 @@ public class Reservation extends BaseEntity {
     public static Reservation from(ReservationDto.Request form, Customer customer, Store store) {
         return Reservation.builder()
                           .reservationDate(form.getReservationDate())
-                          .status(ReservationStatus.PENDING) // default
+                          .status(PENDING) // default
                           .customer(customer)
                           .store(store)
                           .build();
@@ -67,44 +74,57 @@ public class Reservation extends BaseEntity {
     public static ReservationDto.Info to(Reservation reservation) {
         return ReservationDto.Info.builder()
                                   .reservationDate(reservation.getReservationDate())
-                                  .customer(CustomerDto.from(reservation.getCustomer().getUsername()))
-                                  .storeName(reservation.getStore().getStoreName())
-                                  .location(reservation.getStore().getLocation())
-                                  .status(reservation.getStatus())
+                                  .customer(CustomerInfoDto.from(reservation.getCustomer().getUsername()))
+                                  .store(StoreInfoDto.from(reservation.getStore().getStoreName(),
+                                    reservation.getStore().getLocation(),
+                                    reservation.getStatus()))
                                   .build();
     }
 
     // cancel
     public void cancel() {
-        checkStatus(ReservationStatus.CANCELED, ReservationStatus.ARRIVED);
-        this.status = ReservationStatus.CANCELED;
+        checkStatus(CANCELED, ARRIVED);
+        this.status = CANCELED;
     }
 
     // accept
     public void accept() {
-        checkStatus(ReservationStatus.CANCELED, ReservationStatus.ARRIVED, ReservationStatus.ACCEPTED);
-        this.status = ReservationStatus.ACCEPTED;
+        checkStatus(CANCELED, ARRIVED, ACCEPTED);
+        this.status = ACCEPTED;
     }
 
     // reject
     public void reject() {
-        checkStatus(ReservationStatus.CANCELED, ReservationStatus.ARRIVED, ReservationStatus.REJECTED);
-        this.status = ReservationStatus.REJECTED;
+        checkStatus(CANCELED, ARRIVED, REJECTED);
+        this.status = REJECTED;
     }
 
     // arrive
     public void arrive() {
-        checkStatus(ReservationStatus.PENDING, ReservationStatus.CANCELED, ReservationStatus.REJECTED,
-          ReservationStatus.ARRIVED);
-
+        checkStatus(PENDING, CANCELED, REJECTED, ARRIVED);
         // 현재 시간과 예약 시간 비교
         LocalDateTime now = LocalDateTime.now();
         if (now.isBefore(this.reservationDate.minusMinutes(10)) || now.isAfter(this.reservationDate)) {
             throw new CustomException(NOT_ARRIVE_TIME);
         }
 
-        this.status = ReservationStatus.ARRIVED;
+        this.status = ARRIVED;
     }
+
+    // arrived 일때만 리뷰 작성 가능
+    public void checkStatusForReview() {
+        if (this.status != ARRIVED) {
+            throw new CustomException(CANNOT_WRITE_REVIEW);
+        }
+    }
+
+    // 예약자와 리뷰 작성자가 같은지 확인
+    public void checkReservationOwner(Long customerId) {
+        if (!this.customer.getCustomerId().equals(customerId)) {
+            throw new CustomException(CANNOT_WRITE_REVIEW);
+        }
+    }
+
 
     private void checkStatus(ReservationStatus... invalidStatuses) {
         for (ReservationStatus invalidStatus : invalidStatuses) {
@@ -113,4 +133,5 @@ public class Reservation extends BaseEntity {
             }
         }
     }
+
 }

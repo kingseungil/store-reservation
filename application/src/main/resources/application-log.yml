@@ -1,4 +1,3 @@
 logging:
   level:
     org.hibernate.type.descriptor.sql: info
-    org.apache.kafka: error

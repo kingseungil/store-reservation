@@ -1,6 +1,6 @@
 package com.zb.dto.store;
 
-import com.zb.dto.user.ManagerDto;
+import com.zb.dto.user.ManagerInfoDto;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,7 +32,7 @@ public class StoreDto {
         private String storeName;
         private String location;
         private String description;
-        private ManagerDto manager;
+        private ManagerInfoDto manager;
     }
 
     @Getter
