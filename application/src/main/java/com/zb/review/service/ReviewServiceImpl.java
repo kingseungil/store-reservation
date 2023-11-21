@@ -54,6 +54,11 @@ public class ReviewServiceImpl implements ReviewService {
         reviewRepository.save(review);
     }
 
+    /**
+     * 리뷰 수정
+     * @param reviewId 리뷰 ID
+     * @param form     리뷰 정보
+     */
     @Override
     @Transactional
     public void modifyReview(Long reviewId, ReviewDto.Request form) {
@@ -67,6 +72,10 @@ public class ReviewServiceImpl implements ReviewService {
         dbReview.modify(form);
     }
 
+    /**
+     * 리뷰 삭제
+     * @param reviewId 리뷰 ID
+     */
     @Override
     @Transactional
     public void deleteReview(Long reviewId) {
@@ -80,6 +89,11 @@ public class ReviewServiceImpl implements ReviewService {
         reviewRepository.delete(dbReview);
     }
 
+    /**
+     * 상점 리뷰 조회
+     * @param storeId 상점 ID
+     * @return 리뷰 목록
+     */
     @Override
     @Transactional(readOnly = true)
     public List<ReviewDto.Response> getReviewList(Long storeId) {
@@ -89,6 +103,11 @@ public class ReviewServiceImpl implements ReviewService {
                                .toList();
     }
 
+    /**
+     * 리뷰 조회
+     * @param reviewId 리뷰 ID
+     * @return 리뷰 정보
+     */
     @Override
     @Transactional(readOnly = true)
     public ReviewDto.Response getReviewByReviewId(Long reviewId) {

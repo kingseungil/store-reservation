@@ -16,6 +16,10 @@ public class ManagerDomainService {
 
     private final ManagerRepository managerRepository;
 
+    /**
+     * 현재 로그인한 매니저 조회
+     * @return 현재 로그인한 매니저
+     */
     public Manager getLoggedInManager() {
         String currentUsername = SecurityUtil.getCurrentUsername();
 

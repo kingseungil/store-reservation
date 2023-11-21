@@ -16,6 +16,10 @@ public class CustomerDomainService {
 
     private final CustomerRepository customerRepository;
 
+    /**
+     * 현재 로그인한 고객 조회
+     * @return 현재 로그인한 고객
+     */
     public Customer getLoggedInCustomer() {
         String username = SecurityUtil.getCurrentUsername();
         return customerRepository.findByUsername(username)
