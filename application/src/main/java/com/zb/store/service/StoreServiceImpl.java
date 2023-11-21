@@ -3,14 +3,16 @@ package com.zb.store.service;
 import static com.zb.type.ErrorCode.NOT_EXISTED_STORE;
 
 import com.zb.dto.store.StoreDto;
+import com.zb.dto.store.StoreDto.Response;
 import com.zb.entity.Manager;
 import com.zb.entity.Store;
 import com.zb.exception.CustomException;
 import com.zb.repository.StoreRepository;
 import com.zb.service.ManagerDomainService;
 import com.zb.service.StoreDomainService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,11 +70,10 @@ public class StoreServiceImpl implements StoreServce {
     @Override
     @Transactional(readOnly = true)
     // TODO : 페이징 처리
-    public List<StoreDto.Response> getStores() {
-        return storeRepository.findAllWithManager().stream()
+    public Slice<Response> getStores(Pageable pageable) {
+        return storeRepository.findAllWithManager(pageable)
                               .map(Store::to)
-                              .map(StoreDto.Response::new)
-                              .toList();
+                              .map(StoreDto.Response::new);
     }
 
     /**

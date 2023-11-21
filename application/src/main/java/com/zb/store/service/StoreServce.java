@@ -1,7 +1,9 @@
 package com.zb.store.service;
 
 import com.zb.dto.store.StoreDto;
-import java.util.List;
+import com.zb.dto.store.StoreDto.Response;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 public interface StoreServce {
 
@@ -11,7 +13,7 @@ public interface StoreServce {
 
     void deleteStore(Long storeId);
 
-    List<StoreDto.Response> getStores();
+    Slice<Response> getStores(Pageable pageable);
 
     StoreDto.Response getStore(Long storeId);
 

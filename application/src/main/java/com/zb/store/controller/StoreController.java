@@ -2,10 +2,12 @@ package com.zb.store.controller;
 
 import com.zb.annotation.OnlyManager;
 import com.zb.dto.store.StoreDto;
+import com.zb.dto.store.StoreDto.Response;
 import com.zb.store.service.StoreServce;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,8 +56,8 @@ public class StoreController {
 
     // 상점 조회
     @GetMapping
-    public ResponseEntity<List<StoreDto.Response>> getStores() {
-        return ResponseEntity.ok(storeServce.getStores());
+    public ResponseEntity<Slice<Response>> getStores(Pageable pageable) {
+        return ResponseEntity.ok(storeServce.getStores(pageable));
     }
 
     // 상점 상세 조회
