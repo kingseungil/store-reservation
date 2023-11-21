@@ -2,7 +2,6 @@ package com.zb.review.service;
 
 import static com.zb.type.ErrorCode.NOT_EXISTED_REVIEW;
 import static com.zb.type.ErrorCode.NOT_RESERVATION_OWNER;
-import static com.zb.type.ErrorCode.USER_NOT_FOUND;
 
 import com.zb.dto.review.ReviewDto;
 import com.zb.entity.Customer;
@@ -10,8 +9,8 @@ import com.zb.entity.Reservation;
 import com.zb.entity.Review;
 import com.zb.entity.Store;
 import com.zb.exception.CustomException;
-import com.zb.repository.CustomerRepository;
 import com.zb.repository.ReviewRepository;
+import com.zb.service.CustomerDomainService;
 import com.zb.service.ReservationDomainService;
 import com.zb.service.ReviewDomainService;
 import com.zb.util.SecurityUtil;
@@ -24,14 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
 
-    private final CustomerRepository customerRepository;
     private final ReviewRepository reviewRepository;
     private final ReservationDomainService reservationDomainService;
     private final ReviewDomainService reviewDomainService;
+    private final CustomerDomainService customerDomainService;
 
     /**
      * 리뷰 작성
-     *
      * @param reservationId 예약 ID
      * @param form          리뷰 정보
      */
@@ -39,7 +37,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public void writeReview(Long reservationId, ReviewDto.Request form) {
         // 현재 로그인한 고객 조회
-        Customer customer = getLoggedInCustomer();
+        Customer customer = customerDomainService.getLoggedInCustomer();
 
         // 예약 조회 및 상태 확인
         Reservation reservation = reservationDomainService.getReservationForReivew(reservationId,
@@ -100,9 +98,4 @@ public class ReviewServiceImpl implements ReviewService {
                                .orElseThrow(() -> new CustomException(NOT_EXISTED_REVIEW));
     }
 
-    private Customer getLoggedInCustomer() {
-        String username = SecurityUtil.getCurrentUsername();
-        return customerRepository.findByUsername(username)
-                                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-    }
 }

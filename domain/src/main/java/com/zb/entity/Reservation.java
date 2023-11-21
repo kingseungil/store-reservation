@@ -60,6 +60,7 @@ public class Reservation extends BaseEntity {
     @JoinColumn(name = "store_id")
     private Store store;
 
+
     // from
     public static Reservation from(ReservationDto.Request form, Customer customer, Store store) {
         return Reservation.builder()

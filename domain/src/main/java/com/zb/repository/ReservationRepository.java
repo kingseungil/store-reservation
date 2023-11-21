@@ -13,5 +13,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @EntityGraph(attributePaths = {"customer", "store"})
     List<Reservation> findAllByStoreId(Long storeId);
 
-    List<Reservation> findByReservationDateAndStoreId(LocalDateTime reservationDate, Long storeId);
+    boolean existsByReservationDateAndStoreId(LocalDateTime reservationDate, Long storeId);
 }
