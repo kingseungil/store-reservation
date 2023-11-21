@@ -1,6 +1,8 @@
 package com.zb.entity;
 
 import com.zb.dto.review.ReviewDto;
+import com.zb.dto.store.StoreInfoDto;
+import com.zb.dto.user.CustomerInfoDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -57,4 +59,23 @@ public class Review extends BaseEntity {
                      .reservation(reservation)
                      .build();
     }
+
+    // to
+    public static ReviewDto.Info to(Review review) {
+        return ReviewDto.Info.builder()
+                             .content(review.getContent())
+                             .rating(review.getRating())
+                             .customer(CustomerInfoDto.from(review.getCustomer().getUsername()))
+                             .store(
+                               StoreInfoDto.from(review.getStore().getStoreName(), review.getStore().getLocation()))
+                             .build();
+    }
+
+    // modify
+    public void modify(ReviewDto.Request form) {
+        this.content = form.getContent();
+        this.rating = form.getRating();
+    }
+
+    
 }

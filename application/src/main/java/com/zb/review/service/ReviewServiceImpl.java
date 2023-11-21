@@ -1,9 +1,10 @@
 package com.zb.review.service;
 
+import static com.zb.type.ErrorCode.NOT_EXISTED_REVIEW;
+import static com.zb.type.ErrorCode.NOT_RESERVATION_OWNER;
 import static com.zb.type.ErrorCode.USER_NOT_FOUND;
 
 import com.zb.dto.review.ReviewDto;
-import com.zb.dto.review.ReviewDto.Response;
 import com.zb.entity.Customer;
 import com.zb.entity.Reservation;
 import com.zb.entity.Review;
@@ -56,23 +57,47 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional
     public void modifyReview(Long reviewId, ReviewDto.Request form) {
+        // 자신의 리뷰인지 확인
+        Review dbReview = reviewRepository.findById(reviewId)
+                                          .filter(review -> review.getCustomer().getUsername()
+                                                                  .equals(SecurityUtil.getCurrentUsername()))
+                                          .orElseThrow(() -> new CustomException(NOT_RESERVATION_OWNER));
 
+        // 리뷰 수정
+        dbReview.modify(form);
     }
 
     @Override
+    @Transactional
     public void deleteReview(Long reviewId) {
+        // 자신의 리뷰인지 확인
+        Review dbReview = reviewRepository.findById(reviewId)
+                                          .filter(review -> review.getCustomer().getUsername()
+                                                                  .equals(SecurityUtil.getCurrentUsername()))
+                                          .orElseThrow(() -> new CustomException(NOT_RESERVATION_OWNER));
 
+        // 리뷰 삭제
+        reviewRepository.delete(dbReview);
     }
 
     @Override
-    public List<Response> getReviewList(Long storeId) {
-        return null;
+    @Transactional(readOnly = true)
+    public List<ReviewDto.Response> getReviewList(Long storeId) {
+        return reviewRepository.findAllByStoreId(storeId).stream()
+                               .map(Review::to)
+                               .map(ReviewDto.Response::new)
+                               .toList();
     }
 
     @Override
-    public Response getReviewByReviewId(Long reviewId) {
-        return null;
+    @Transactional(readOnly = true)
+    public ReviewDto.Response getReviewByReviewId(Long reviewId) {
+        return reviewRepository.findById(reviewId)
+                               .map(Review::to)
+                               .map(ReviewDto.Response::new)
+                               .orElseThrow(() -> new CustomException(NOT_EXISTED_REVIEW));
     }
 
     private Customer getLoggedInCustomer() {

@@ -39,7 +39,8 @@ public enum ErrorCode {
 
     // review
     CANNOT_WRITE_REVIEW("리뷰를 작성할 수 없습니다."),
-    ALREADY_WRITTEN_REVIEW("이미 작성한 리뷰가 있습니다.");
+    ALREADY_WRITTEN_REVIEW("이미 작성한 리뷰가 있습니다."),
+    NOT_EXISTED_REVIEW("존재하지 않는 리뷰입니다.");
 
     private final String description;
 }

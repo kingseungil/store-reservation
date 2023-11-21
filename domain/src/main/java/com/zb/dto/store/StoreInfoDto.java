@@ -18,11 +18,19 @@ public class StoreInfoDto {
     private String location;
     private ReservationStatus status;
 
+    
     public static StoreInfoDto from(String storeName, String location, ReservationStatus status) {
         return StoreInfoDto.builder()
                            .storeName(storeName)
                            .location(location)
                            .status(status)
+                           .build();
+    }
+
+    public static StoreInfoDto from(String storeName, String location) {
+        return StoreInfoDto.builder()
+                           .storeName(storeName)
+                           .location(location)
                            .build();
     }
 }
