@@ -11,14 +11,14 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerDto {
+public class ManagerInfoDto {
 
     // 나중에 필요하면 추가
     private String username;
 
-    public static CustomerDto from(String username) {
-        return CustomerDto.builder()
-                          .username(username)
-                          .build();
+    public static ManagerInfoDto from(String username) {
+        return ManagerInfoDto.builder()
+                             .username(username)
+                             .build();
     }
 }

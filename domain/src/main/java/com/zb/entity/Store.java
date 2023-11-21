@@ -2,7 +2,7 @@ package com.zb.entity;
 
 
 import com.zb.dto.store.StoreDto;
-import com.zb.dto.user.ManagerDto;
+import com.zb.dto.user.ManagerInfoDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -60,7 +60,7 @@ public class Store extends BaseEntity {
                             .storeName(store.getStoreName())
                             .location(store.getLocation())
                             .description(store.getDescription())
-                            .manager(ManagerDto.from(store.getManager().getUsername()))
+                            .manager(ManagerInfoDto.from(store.getManager().getUsername()))
                             .build();
     }
 

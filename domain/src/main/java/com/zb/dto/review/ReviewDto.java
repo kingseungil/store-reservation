@@ -1,15 +1,14 @@
-package com.zb.dto.reservation;
+package com.zb.dto.review;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.zb.dto.store.StoreInfoDto;
 import com.zb.dto.user.CustomerInfoDto;
-import java.time.LocalDateTime;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-public class ReservationDto {
+public class ReviewDto {
 
     @Getter
     @AllArgsConstructor
@@ -17,8 +16,10 @@ public class ReservationDto {
     @Builder
     public static class Request {
 
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-        private LocalDateTime reservationDate;
+        @NotNull
+        private String content;
+        @NotNull
+        private int rating;
 
     }
 
@@ -28,10 +29,10 @@ public class ReservationDto {
     @Builder
     public static class Info {
 
-        private LocalDateTime reservationDate;
+        private String content;
+        private int rating;
         private CustomerInfoDto customer;
         private StoreInfoDto store;
-
     }
 
     @Getter
@@ -40,7 +41,6 @@ public class ReservationDto {
     @Builder
     public static class Response {
 
-        private ReservationDto.Info info;
+        private ReviewDto.Info info;
     }
-
 }
