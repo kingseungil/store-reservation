@@ -69,7 +69,6 @@ public class StoreServiceImpl implements StoreServce {
      */
     @Override
     @Transactional(readOnly = true)
-    // TODO : 페이징 처리
     public Slice<Response> getStores(Pageable pageable) {
         return storeRepository.findAllWithManager(pageable)
                               .map(Store::to)
