@@ -2,6 +2,7 @@ package com.zb.dto.auth;
 
 import com.zb.type.UserRole;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,6 +54,11 @@ public class AuthDto {
             private String password;
 
             private UserRole authority;
+
+            @NotNull
+            // 핸드폰번호 유효성 검사(010-1234-5678)
+            @Pattern(regexp = "^01(?:0|1|[6-9])-(?:\\d{3}|\\d{4})-\\d{4}$", message = "핸드폰번호 형식이 맞지 않습니다.")
+            private String phoneNumber;
         }
 
 
@@ -63,6 +69,7 @@ public class AuthDto {
         public static class SignUpResponse {
 
             private String username;
+            private String phoneNumber;
             private UserRole authority;
         }
     }
@@ -81,6 +88,11 @@ public class AuthDto {
             private String password;
 
             private UserRole authority;
+
+            @NotNull
+            // 핸드폰번호 유효성 검사(010-1234-5678)
+            @Pattern(regexp = "^01(?:0|1|[6-9])-(?:\\d{3}|\\d{4})-\\d{4}$", message = "핸드폰번호 형식이 맞지 않습니다.")
+            private String phoneNumber;
         }
 
 
@@ -91,6 +103,7 @@ public class AuthDto {
         public static class SignUpResponse {
 
             private String username;
+            private String phoneNumber;
             private UserRole authority;
         }
     }

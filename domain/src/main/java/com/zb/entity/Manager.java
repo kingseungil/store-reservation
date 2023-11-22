@@ -38,6 +38,9 @@ public class Manager extends BaseEntity {
     @Column(name = "password", length = 100)
     private String password;
 
+    @Column(name = "phone_number", length = 50)
+    private String phoneNumber;
+
     @Column(name = "activated", columnDefinition = "boolean default false")
     private boolean activated;
 

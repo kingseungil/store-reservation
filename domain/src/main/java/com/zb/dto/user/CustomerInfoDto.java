@@ -15,6 +15,14 @@ public class CustomerInfoDto {
 
     // 나중에 필요하면 추가
     private String username;
+    private String phoneNumber;
+
+    public static CustomerInfoDto from(String username, String phoneNumber) {
+        return CustomerInfoDto.builder()
+                              .username(username)
+                              .phoneNumber(phoneNumber)
+                              .build();
+    }
 
     public static CustomerInfoDto from(String username) {
         return CustomerInfoDto.builder()

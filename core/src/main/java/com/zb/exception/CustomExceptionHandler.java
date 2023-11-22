@@ -35,7 +35,7 @@ public class CustomExceptionHandler {
 
         return ErrorResponse.builder()
                             .errorCode(INVALID_REQUEST)
-                            .errorMessage(INVALID_REQUEST.getDescription())
+                            .errorMessage(e.getBindingResult().getAllErrors().get(0).getDefaultMessage())
                             .build();
     }
 

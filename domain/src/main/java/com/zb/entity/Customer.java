@@ -35,6 +35,9 @@ public class Customer extends BaseEntity {
     @Column(name = "password", length = 100)
     private String password;
 
+    @Column(name = "phone_number", length = 50)
+    private String phoneNumber;
+
     @Column(name = "activated")
     private boolean activated;
 

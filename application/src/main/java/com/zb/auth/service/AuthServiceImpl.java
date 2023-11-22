@@ -61,6 +61,7 @@ public class AuthServiceImpl implements AuthService {
         Customer customer = Customer.builder()
                                     .username(form.getUsername())
                                     .password(passwordEncoder.encode(form.getPassword()))
+                                    .phoneNumber(form.getPhoneNumber())
                                     .activated(true)
                                     .authority(authority)
                                     .build();
@@ -70,6 +71,7 @@ public class AuthServiceImpl implements AuthService {
 
         return SignUpResponse.builder()
                              .username(customer.getUsername())
+                             .phoneNumber(customer.getPhoneNumber())
                              .authority(customer.getAuthority().getAuthorityName())
                              .build();
     }
@@ -106,6 +108,7 @@ public class AuthServiceImpl implements AuthService {
 
         return SignUpManager.SignUpResponse.builder()
                                            .username(manager.getUsername())
+                                           .phoneNumber(manager.getPhoneNumber())
                                            .authority(manager.getAuthority().getAuthorityName())
                                            .build();
     }
