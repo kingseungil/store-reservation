@@ -1,14 +1,17 @@
 package com.zb.auth.service;
 
 import com.zb.dto.auth.AuthDto.SignIn;
+import com.zb.dto.auth.AuthDto.SignIn.SignInRequest;
 import com.zb.dto.auth.AuthDto.SignUpCustomer;
+import com.zb.dto.auth.AuthDto.SignUpCustomer.SignUpResponse;
 import com.zb.dto.auth.AuthDto.SignUpManager;
+import com.zb.dto.auth.AuthDto.SignUpManager.SignUpRequest;
 
 public interface AuthService {
 
-    SignUpCustomer.Response signUpCustomer(SignUpCustomer.Request form);
+    SignUpResponse signUpCustomer(SignUpCustomer.SignUpRequest form);
 
-    SignUpManager.Response signUpManager(SignUpManager.Request form);
+    SignUpManager.SignUpResponse signUpManager(SignUpRequest form);
 
-    SignIn.Response signIn(SignIn.Request form);
+    SignIn.SignInResponse signIn(SignInRequest form);
 }

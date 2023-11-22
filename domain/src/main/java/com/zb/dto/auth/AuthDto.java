@@ -14,7 +14,7 @@ public class AuthDto {
     public static class SignIn {
 
         @Getter
-        public static class Request {
+        public static class SignInRequest {
 
             @NotNull
             @Size(min = 3, max = 50)
@@ -33,7 +33,7 @@ public class AuthDto {
         @AllArgsConstructor
         @NoArgsConstructor
         @Builder
-        public static class Response {
+        public static class SignInResponse {
 
             private String token;
         }
@@ -42,7 +42,7 @@ public class AuthDto {
     public static class SignUpCustomer {
 
         @Getter
-        public static class Request {
+        public static class SignUpRequest {
 
             @NotNull
             @Size(min = 3, max = 50)
@@ -60,7 +60,7 @@ public class AuthDto {
         @AllArgsConstructor
         @NoArgsConstructor
         @Builder
-        public static class Response {
+        public static class SignUpResponse {
 
             private String username;
             private UserRole authority;
@@ -70,7 +70,7 @@ public class AuthDto {
     public static class SignUpManager {
 
         @Getter
-        public static class Request {
+        public static class SignUpRequest {
 
             @NotNull
             @Size(min = 3, max = 50)
@@ -88,7 +88,7 @@ public class AuthDto {
         @AllArgsConstructor
         @NoArgsConstructor
         @Builder
-        public static class Response {
+        public static class SignUpResponse {
 
             private String username;
             private UserRole authority;
