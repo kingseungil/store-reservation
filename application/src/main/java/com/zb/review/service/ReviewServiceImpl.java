@@ -3,7 +3,8 @@ package com.zb.review.service;
 import static com.zb.type.ErrorCode.NOT_EXISTED_REVIEW;
 import static com.zb.type.UserRole.ROLE_ADMIN;
 
-import com.zb.dto.review.ReviewDto;
+import com.zb.dto.review.ReviewDto.ReviewRequest;
+import com.zb.dto.review.ReviewDto.ReviewResponse;
 import com.zb.entity.Customer;
 import com.zb.entity.Reservation;
 import com.zb.entity.Review;
@@ -35,7 +36,7 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     @Transactional
-    public void writeReview(Long reservationId, ReviewDto.Request form) {
+    public void writeReview(Long reservationId, ReviewRequest form) {
         // 현재 로그인한 고객 조회
         Customer customer = customerDomainService.getLoggedInCustomer();
 
@@ -61,7 +62,7 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     @Transactional
-    public void modifyReview(Long reviewId, ReviewDto.Request form) {
+    public void modifyReview(Long reviewId, ReviewRequest form) {
         // 자신의 리뷰인지 확인
         Review dbReview = reviewDomainService.getReviewOfCustomer(reviewId,
           SecurityUtil.getCurrentUsername());
@@ -95,10 +96,10 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<ReviewDto.Response> getReviewList(Long storeId) {
+    public List<ReviewResponse> getReviewList(Long storeId) {
         return reviewRepository.findAllByStoreId(storeId).stream()
                                .map(Review::to)
-                               .map(ReviewDto.Response::new)
+                               .map(ReviewResponse::new)
                                .toList();
     }
 
@@ -109,10 +110,10 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     @Transactional(readOnly = true)
-    public ReviewDto.Response getReviewByReviewId(Long reviewId) {
+    public ReviewResponse getReviewByReviewId(Long reviewId) {
         return reviewRepository.findById(reviewId)
                                .map(Review::to)
-                               .map(ReviewDto.Response::new)
+                               .map(ReviewResponse::new)
                                .orElseThrow(() -> new CustomException(NOT_EXISTED_REVIEW));
     }
 

@@ -1,6 +1,7 @@
 package com.zb.entity;
 
 import com.zb.dto.review.ReviewDto;
+import com.zb.dto.review.ReviewDto.ReviewRequest;
 import com.zb.dto.store.StoreInfoDto;
 import com.zb.dto.user.CustomerInfoDto;
 import jakarta.persistence.Column;
@@ -50,7 +51,7 @@ public class Review extends BaseEntity {
     private Reservation reservation;
 
     // from
-    public static Review from(ReviewDto.Request form, Customer customer, Store store, Reservation reservation) {
+    public static Review from(ReviewRequest form, Customer customer, Store store, Reservation reservation) {
         return Review.builder()
                      .content(form.getContent())
                      .rating(form.getRating())
@@ -72,10 +73,10 @@ public class Review extends BaseEntity {
     }
 
     // modify
-    public void modify(ReviewDto.Request form) {
+    public void modify(ReviewRequest form) {
         this.content = form.getContent();
         this.rating = form.getRating();
     }
 
-    
+
 }

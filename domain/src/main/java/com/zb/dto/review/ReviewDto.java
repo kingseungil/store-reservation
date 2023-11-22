@@ -14,7 +14,7 @@ public class ReviewDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class Request {
+    public static class ReviewRequest {
 
         @NotNull
         private String content;
@@ -39,7 +39,7 @@ public class ReviewDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class Response {
+    public static class ReviewResponse {
 
         private ReviewDto.Info info;
     }

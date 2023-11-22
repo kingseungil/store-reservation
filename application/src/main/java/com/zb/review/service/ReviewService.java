@@ -1,19 +1,20 @@
 package com.zb.review.service;
 
-import com.zb.dto.review.ReviewDto;
+import com.zb.dto.review.ReviewDto.ReviewRequest;
+import com.zb.dto.review.ReviewDto.ReviewResponse;
 import java.util.List;
 
 public interface ReviewService {
 
-    void writeReview(Long reservationId, ReviewDto.Request form);
+    void writeReview(Long reservationId, ReviewRequest form);
 
-    void modifyReview(Long reviewId, ReviewDto.Request form);
+    void modifyReview(Long reviewId, ReviewRequest form);
 
     void deleteReview(Long reviewId);
 
-    List<ReviewDto.Response> getReviewList(Long storeId);
+    List<ReviewResponse> getReviewList(Long storeId);
 
-    ReviewDto.Response getReviewByReviewId(Long reviewId);
+    ReviewResponse getReviewByReviewId(Long reviewId);
 
 
 }
