@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 public class StoreDto {
 
@@ -24,6 +25,7 @@ public class StoreDto {
     }
 
     @Getter
+    @Setter
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
@@ -33,6 +35,7 @@ public class StoreDto {
         private String location;
         private String description;
         private ManagerInfoDto manager;
+        private double rating;
     }
 
     @Getter

@@ -15,7 +15,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     Optional<Store> findByStoreName(String storeName);
 
     @EntityGraph(attributePaths = {"manager"})
-    @Query("select s from Store s")
-    Slice<Store> findAllWithManager(Pageable pageable);
+    @Query("SELECT s, AVG(r.rating) as avgRating FROM Store s LEFT JOIN s.reviews r GROUP BY s.id ORDER BY avgRating DESC")
+    Slice<Object[]> findAllWithAverageRating(Pageable pageable);
 
 }

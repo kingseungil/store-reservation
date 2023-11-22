@@ -7,6 +7,7 @@ import com.zb.dto.store.StoreDto.StoreResponse;
 import com.zb.entity.Manager;
 import com.zb.entity.Store;
 import com.zb.exception.CustomException;
+import com.zb.repository.ReviewRepository;
 import com.zb.repository.StoreRepository;
 import com.zb.service.ManagerDomainService;
 import com.zb.service.StoreDomainService;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class StoreServiceImpl implements StoreServce {
 
     private final StoreRepository storeRepository;
+    private final ReviewRepository reviewRepository;
     private final StoreDomainService storeDomainService;
     private final ManagerDomainService managerDomainService;
 
@@ -70,9 +72,14 @@ public class StoreServiceImpl implements StoreServce {
     @Override
     @Transactional(readOnly = true)
     public Slice<StoreResponse> getStores(Pageable pageable) {
-        return storeRepository.findAllWithManager(pageable)
-                              .map(Store::to)
-                              .map(StoreResponse::new);
+        return storeRepository.findAllWithAverageRating(pageable)
+                              .map(result -> {
+                                  Store store = (Store) result[0];
+                                  Double averageRating = (Double) result[1];
+                                  StoreResponse response = new StoreResponse(Store.to(store));
+                                  response.getInfo().setRating(averageRating == null ? 0 : averageRating);
+                                  return response;
+                              });
     }
 
     /**
@@ -83,10 +90,13 @@ public class StoreServiceImpl implements StoreServce {
     @Override
     @Transactional(readOnly = true)
     public StoreResponse getStore(Long storeId) {
-        return storeRepository.findById(storeId)
-                              .map(Store::to)
-                              .map(StoreResponse::new)
-                              .orElseThrow(() -> new CustomException(NOT_EXISTED_STORE));
+        Store store = storeRepository.findById(storeId)
+                                     .orElseThrow(() -> new CustomException(NOT_EXISTED_STORE));
+
+        Double avergaRating = reviewRepository.findAverageRatingByStoreId(storeId).orElse(0.0);
+        StoreResponse response = new StoreResponse(Store.to(store));
+        response.getInfo().setRating(avergaRating);
+        return response;
     }
 
 }
