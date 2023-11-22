@@ -4,6 +4,7 @@ import com.zb.annotation.OnlyCustomer;
 import com.zb.annotation.OnlyManager;
 import com.zb.dto.reservation.ReservationDto.ReservationRequest;
 import com.zb.dto.reservation.ReservationDto.ReservationResponse;
+import com.zb.dto.reservation.ReservationDto.ReservationsResponse;
 import com.zb.reservation.service.ReservationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -72,7 +73,7 @@ public class ReservationController {
     @GetMapping("/manager/{storeId}")
     @OnlyManager
     @Operation(summary = "가게별 예약 조회(매니저)")
-    public ResponseEntity<List<ReservationResponse>> getReservations(
+    public ResponseEntity<List<ReservationsResponse>> getReservations(
       @PathVariable Long storeId
     ) {
         return ResponseEntity.ok(reservationService.getReservationsByStoreId(storeId));

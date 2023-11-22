@@ -5,10 +5,13 @@ import com.zb.dto.store.StoreInfoDto;
 import com.zb.dto.user.CustomerInfoDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 public class ReservationDto {
 
@@ -30,19 +33,43 @@ public class ReservationDto {
     @Builder
     public static class Info {
 
-        private LocalDateTime reservationDate;
         private CustomerInfoDto customer;
         private StoreInfoDto store;
 
     }
 
     @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class ReservationsResponse {
+
+        private LocalDateTime reservationDate;
+        private List<ReservationTimeTable> timeTable;
+    }
+
+    @Getter
+    @Setter
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
     public static class ReservationResponse {
 
+        private LocalDateTime reservationDate;
         private ReservationDto.Info info;
+
     }
 
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class ReservationTimeTable {
+
+        private LocalTime time;
+        private ReservationDto.Info info;
+
+    }
 }

@@ -5,6 +5,8 @@ import static com.zb.type.ErrorCode.NOT_EXISTED_STORE;
 
 import com.zb.dto.reservation.ReservationDto.ReservationRequest;
 import com.zb.dto.reservation.ReservationDto.ReservationResponse;
+import com.zb.dto.reservation.ReservationDto.ReservationTimeTable;
+import com.zb.dto.reservation.ReservationDto.ReservationsResponse;
 import com.zb.entity.Customer;
 import com.zb.entity.Reservation;
 import com.zb.entity.Store;
@@ -14,7 +16,11 @@ import com.zb.repository.StoreRepository;
 import com.zb.service.CustomerDomainService;
 import com.zb.service.ReservationDomainService;
 import com.zb.util.SecurityUtil;
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,10 +65,13 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional(readOnly = true)
     public ReservationResponse getReservationByReservationId(Long reservationId) {
-        return reservationRepository.findById(reservationId)
-                                    .map(Reservation::to)
-                                    .map(ReservationResponse::new)
-                                    .orElseThrow(() -> new CustomException(NOT_EXISTED_RESERVATION));
+        Reservation reservation = reservationRepository.findById(reservationId)
+                                                       .orElseThrow(() -> new CustomException(NOT_EXISTED_RESERVATION));
+
+        return ReservationResponse.builder()
+                                  .reservationDate(reservation.getReservationDate())
+                                  .info(Reservation.to(reservation))
+                                  .build();
     }
 
     /**
@@ -104,11 +113,13 @@ public class ReservationServiceImpl implements ReservationService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<ReservationResponse> getReservationsByStoreId(Long storeId) {
-        return reservationRepository.findAllByStoreId(storeId).stream()
-                                    .map(Reservation::to)
-                                    .map(ReservationResponse::new)
-                                    .toList();
+    public List<ReservationsResponse> getReservationsByStoreId(Long storeId) {
+        List<Reservation> reservations = reservationRepository.findByStoreIdOrderByReservationDateAsc(
+          storeId);
+
+        return groupReservationsByDate(reservations).entrySet().stream()
+                                                    .map(this::createReservationsResponse)
+                                                    .toList();
     }
 
 
@@ -143,4 +154,31 @@ public class ReservationServiceImpl implements ReservationService {
 
     }
 
+    // 예약 날짜별로 그룹핑
+    private Map<LocalDate, List<Reservation>> groupReservationsByDate(List<Reservation> reservations) {
+        return reservations.stream()
+                           .collect(
+                             Collectors.groupingBy(reservation -> reservation.getReservationDate().toLocalDate()));
+    }
+
+    // 예약 날짜별로 응답 생성
+    private ReservationsResponse createReservationsResponse(Map.Entry<LocalDate, List<Reservation>> entry) {
+        List<ReservationTimeTable> timeTable = createTimeTable(entry.getValue());
+        return ReservationsResponse.builder()
+                                   .reservationDate(entry.getKey().atStartOfDay())
+                                   .timeTable(timeTable)
+                                   .build();
+    }
+
+
+    // 예약 타임 테이블 생성
+    private List<ReservationTimeTable> createTimeTable(List<Reservation> reservations) {
+        return reservations.stream()
+                           .map(reservation -> ReservationTimeTable.builder()
+                                                                   .time(reservation.getReservationDate().toLocalTime())
+                                                                   .info(Reservation.to(reservation))
+                                                                   .build())
+                           .sorted(Comparator.comparing(ReservationTimeTable::getTime))
+                           .collect(Collectors.toList());
+    }
 }
