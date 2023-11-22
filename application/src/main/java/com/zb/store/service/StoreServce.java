@@ -1,20 +1,20 @@
 package com.zb.store.service;
 
-import com.zb.dto.store.StoreDto;
-import com.zb.dto.store.StoreDto.Response;
+import com.zb.dto.store.StoreDto.StoreRequest;
+import com.zb.dto.store.StoreDto.StoreResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
 public interface StoreServce {
 
-    void registerStore(StoreDto.Request storeDto);
+    void registerStore(StoreRequest storeDto);
 
-    void updateStore(StoreDto.Request storeDto, Long storeId);
+    void updateStore(StoreRequest storeDto, Long storeId);
 
     void deleteStore(Long storeId);
 
-    Slice<Response> getStores(Pageable pageable);
+    Slice<StoreResponse> getStores(Pageable pageable);
 
-    StoreDto.Response getStore(Long storeId);
+    StoreResponse getStore(Long storeId);
 
 }

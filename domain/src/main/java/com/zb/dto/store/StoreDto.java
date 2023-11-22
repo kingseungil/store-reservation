@@ -13,7 +13,7 @@ public class StoreDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class Request {
+    public static class StoreRequest {
 
         @Size(min = 1, max = 50)
         private String storeName;
@@ -39,7 +39,7 @@ public class StoreDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class Response {
+    public static class StoreResponse {
 
         private Info info;
     }

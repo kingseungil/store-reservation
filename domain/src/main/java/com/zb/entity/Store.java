@@ -2,6 +2,7 @@ package com.zb.entity;
 
 
 import com.zb.dto.store.StoreDto;
+import com.zb.dto.store.StoreDto.StoreRequest;
 import com.zb.dto.user.ManagerInfoDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,7 +46,7 @@ public class Store extends BaseEntity {
     private Manager manager;
 
     // from
-    public static Store from(StoreDto.Request form, Manager manager) {
+    public static Store from(StoreRequest form, Manager manager) {
         return Store.builder()
                     .storeName(form.getStoreName())
                     .location(form.getLocation())
@@ -64,7 +65,7 @@ public class Store extends BaseEntity {
                             .build();
     }
 
-    public void updateStore(StoreDto.Request form) {
+    public void updateStore(StoreRequest form) {
         this.storeName = form.getStoreName();
         this.location = form.getLocation();
         this.description = form.getDescription();

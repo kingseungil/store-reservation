@@ -2,8 +2,8 @@ package com.zb.store.service;
 
 import static com.zb.type.ErrorCode.NOT_EXISTED_STORE;
 
-import com.zb.dto.store.StoreDto;
-import com.zb.dto.store.StoreDto.Response;
+import com.zb.dto.store.StoreDto.StoreRequest;
+import com.zb.dto.store.StoreDto.StoreResponse;
 import com.zb.entity.Manager;
 import com.zb.entity.Store;
 import com.zb.exception.CustomException;
@@ -30,7 +30,7 @@ public class StoreServiceImpl implements StoreServce {
      */
     @Override
     @Transactional
-    public void registerStore(StoreDto.Request form) {
+    public void registerStore(StoreRequest form) {
         // 이미 존재하는 상점인지 확인
         storeDomainService.checkExistStore(form.getStoreName());
         // 현재 로그인한 매니저 조회
@@ -47,7 +47,7 @@ public class StoreServiceImpl implements StoreServce {
      */
     @Override
     @Transactional
-    public void updateStore(StoreDto.Request form, Long storeId) {
+    public void updateStore(StoreRequest form, Long storeId) {
         // 상점 조회 (권한 확인)
         Store store = storeDomainService.getStoreManagedByCurrentUser(storeId);
         // 상점 수정
@@ -69,10 +69,10 @@ public class StoreServiceImpl implements StoreServce {
      */
     @Override
     @Transactional(readOnly = true)
-    public Slice<Response> getStores(Pageable pageable) {
+    public Slice<StoreResponse> getStores(Pageable pageable) {
         return storeRepository.findAllWithManager(pageable)
                               .map(Store::to)
-                              .map(StoreDto.Response::new);
+                              .map(StoreResponse::new);
     }
 
     /**
@@ -82,10 +82,10 @@ public class StoreServiceImpl implements StoreServce {
      */
     @Override
     @Transactional(readOnly = true)
-    public StoreDto.Response getStore(Long storeId) {
+    public StoreResponse getStore(Long storeId) {
         return storeRepository.findById(storeId)
                               .map(Store::to)
-                              .map(StoreDto.Response::new)
+                              .map(StoreResponse::new)
                               .orElseThrow(() -> new CustomException(NOT_EXISTED_STORE));
     }
 

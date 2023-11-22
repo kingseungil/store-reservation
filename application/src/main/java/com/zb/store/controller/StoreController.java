@@ -1,9 +1,11 @@
 package com.zb.store.controller;
 
 import com.zb.annotation.OnlyManager;
-import com.zb.dto.store.StoreDto;
-import com.zb.dto.store.StoreDto.Response;
+import com.zb.dto.store.StoreDto.StoreRequest;
+import com.zb.dto.store.StoreDto.StoreResponse;
 import com.zb.store.service.StoreServce;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "STORE")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/store")
@@ -27,25 +30,28 @@ public class StoreController {
 
     // 상점 등록
     @OnlyManager
+    @Operation(summary = "상점 등록")
     @PostMapping("/manager")
     public ResponseEntity<String> registerStore(
-      @Valid @RequestBody StoreDto.Request form) {
+      @Valid @RequestBody StoreRequest form) {
         storeServce.registerStore(form);
         return ResponseEntity.ok("등록 성공");
     }
 
     // 상점 수정
     @OnlyManager
+    @Operation(summary = "상점 수정")
     @PutMapping("/manager/{storeId}")
     public ResponseEntity<String> updateStore(
       @PathVariable("storeId") Long storeId,
-      @Valid @RequestBody StoreDto.Request form) {
+      @Valid @RequestBody StoreRequest form) {
         storeServce.updateStore(form, storeId);
         return ResponseEntity.ok("수정 성공");
     }
 
     // 상점 삭제
     @OnlyManager
+    @Operation(summary = "상점 삭제")
     @DeleteMapping("/manager/{storeId}")
     public ResponseEntity<String> deleteStore(
       @PathVariable("storeId") Long storeId) {
@@ -56,13 +62,15 @@ public class StoreController {
 
     // 상점 조회
     @GetMapping
-    public ResponseEntity<Slice<Response>> getStores(Pageable pageable) {
+    @Operation(summary = "상점 조회")
+    public ResponseEntity<Slice<StoreResponse>> getStores(Pageable pageable) {
         return ResponseEntity.ok(storeServce.getStores(pageable));
     }
 
     // 상점 상세 조회
     @GetMapping("/{storeId}")
-    public ResponseEntity<StoreDto.Response> getStore(
+    @Operation(summary = "상점 상세 조회")
+    public ResponseEntity<StoreResponse> getStore(
       @PathVariable("storeId") Long storeId) {
         return ResponseEntity.ok(storeServce.getStore(storeId));
     }
