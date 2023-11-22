@@ -1,15 +1,16 @@
 package com.zb.reservation.service;
 
-import com.zb.dto.reservation.ReservationDto;
+import com.zb.dto.reservation.ReservationDto.ReservationRequest;
+import com.zb.dto.reservation.ReservationDto.ReservationResponse;
 import java.util.List;
 
 public interface ReservationService {
 
-    void reserve(Long storeId, ReservationDto.Request form);
+    void reserve(Long storeId, ReservationRequest form);
 
-    List<ReservationDto.Response> getReservationsByStoreId(Long storeId);
+    List<ReservationResponse> getReservationsByStoreId(Long storeId);
 
-    ReservationDto.Response getReservationByReservationId(Long reservationId);
+    ReservationResponse getReservationByReservationId(Long reservationId);
 
     void cancelReservation(Long reservationId);
 

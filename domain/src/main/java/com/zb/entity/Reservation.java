@@ -10,6 +10,7 @@ import static com.zb.type.ReservationStatus.PENDING;
 import static com.zb.type.ReservationStatus.REJECTED;
 
 import com.zb.dto.reservation.ReservationDto;
+import com.zb.dto.reservation.ReservationDto.ReservationRequest;
 import com.zb.dto.store.StoreInfoDto;
 import com.zb.dto.user.CustomerInfoDto;
 import com.zb.exception.CustomException;
@@ -62,7 +63,7 @@ public class Reservation extends BaseEntity {
 
 
     // from
-    public static Reservation from(ReservationDto.Request form, Customer customer, Store store) {
+    public static Reservation from(ReservationRequest form, Customer customer, Store store) {
         return Reservation.builder()
                           .reservationDate(form.getReservationDate())
                           .status(PENDING) // default

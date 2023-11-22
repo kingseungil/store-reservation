@@ -3,7 +3,8 @@ package com.zb.reservation.service;
 import static com.zb.type.ErrorCode.NOT_EXISTED_RESERVATION;
 import static com.zb.type.ErrorCode.NOT_EXISTED_STORE;
 
-import com.zb.dto.reservation.ReservationDto;
+import com.zb.dto.reservation.ReservationDto.ReservationRequest;
+import com.zb.dto.reservation.ReservationDto.ReservationResponse;
 import com.zb.entity.Customer;
 import com.zb.entity.Reservation;
 import com.zb.entity.Store;
@@ -36,7 +37,7 @@ public class ReservationServiceImpl implements ReservationService {
      */
     @Override
     @Transactional
-    public void reserve(Long storeId, ReservationDto.Request form) {
+    public void reserve(Long storeId, ReservationRequest form) {
         // 현재 로그인한 고객 조회
         Customer customer = customerDomainService.getLoggedInCustomer();
         // 상점 조회
@@ -57,10 +58,10 @@ public class ReservationServiceImpl implements ReservationService {
      */
     @Override
     @Transactional(readOnly = true)
-    public ReservationDto.Response getReservationByReservationId(Long reservationId) {
+    public ReservationResponse getReservationByReservationId(Long reservationId) {
         return reservationRepository.findById(reservationId)
                                     .map(Reservation::to)
-                                    .map(ReservationDto.Response::new)
+                                    .map(ReservationResponse::new)
                                     .orElseThrow(() -> new CustomException(NOT_EXISTED_RESERVATION));
     }
 
@@ -103,10 +104,10 @@ public class ReservationServiceImpl implements ReservationService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<ReservationDto.Response> getReservationsByStoreId(Long storeId) {
+    public List<ReservationResponse> getReservationsByStoreId(Long storeId) {
         return reservationRepository.findAllByStoreId(storeId).stream()
                                     .map(Reservation::to)
-                                    .map(ReservationDto.Response::new)
+                                    .map(ReservationResponse::new)
                                     .toList();
     }
 
