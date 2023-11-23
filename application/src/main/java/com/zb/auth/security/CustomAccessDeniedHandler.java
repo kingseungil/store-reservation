@@ -26,7 +26,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
       AccessDeniedException accessDeniedException) throws IOException, ServletException {
         ErrorResponse errorResponse = ErrorResponse.builder()
                                                    .errorCode(ACCESS_DENIED)
-                                                   .errorMessage(ACCESS_DENIED.getDescription())
+                                                   .errorMessage(ACCESS_DENIED.getMessage())
                                                    .build();
 
         log.error("{} is occurred in CustomAccessDeniedHandler", errorResponse.getErrorCode());
