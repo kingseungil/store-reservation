@@ -46,7 +46,8 @@ public class JwtTokenProvider implements InitializingBean {
 
     /**
      * Bean이 초기화될 때 비밀 키 설정
-     *
+     * <p>
+     * (또는 @PostConstruct 사용해서 평문을 암호화 해도 됨)
      * @throws Exception 비밀 키 생성 중 오류가 발생한 경우
      */
     @Override
@@ -57,7 +58,6 @@ public class JwtTokenProvider implements InitializingBean {
 
     /**
      * Authentication 객체의 권한 정보를 이용해서 토큰 생성
-     *
      * @param authentication Authentication 객체
      * @return 생성된 토큰
      */
@@ -81,7 +81,6 @@ public class JwtTokenProvider implements InitializingBean {
 
     /**
      * Authentication 객체 생성
-     *
      * @param token jwt token
      * @return Authentication 객체
      */
@@ -104,7 +103,6 @@ public class JwtTokenProvider implements InitializingBean {
 
     /**
      * 토큰 유효성 검증
-     *
      * @param token jwt token
      */
     public void validateToken(String token) throws Exception {

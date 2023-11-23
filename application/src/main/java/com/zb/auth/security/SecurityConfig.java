@@ -48,20 +48,29 @@ public class SecurityConfig {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
           .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-            .requestMatchers("/api/signin").permitAll() // 로그인 api
-            .requestMatchers("/api/signup-customer").permitAll() // 회원가입 api
-            .requestMatchers("/api/signup-manager").permitAll() // 회원가입 api
-            .requestMatchers("/api/store/manager/**").hasRole("MANAGER")
-            .requestMatchers("/api/store/**").permitAll()
-            .requestMatchers("/api/reservation/customer/**").hasRole("CUSTOMER")
-            .requestMatchers("/api/reservation/manager/**").hasRole("MANAGER")
-            .requestMatchers("/api/review/list/{storeId}").permitAll()
-            .requestMatchers("/api/review/detail/{reviewId}").permitAll()
-            .requestMatchers(HttpMethod.POST, "/api/review/{reservationId}").hasRole("CUSTOMER")
-            .requestMatchers(HttpMethod.PUT, "/api/review/{reservationId}").hasRole("CUSTOMER")
-            .requestMatchers(HttpMethod.DELETE, "/api/review/{reservationId}").hasAnyRole("CUSTOMER", "ADMIN")
-            .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**").permitAll() // swagger
-            .anyRequest().authenticated()) // 그 외 인증 없이 접근X
+            // 모두 허용
+            .requestMatchers(
+              "/api/signin", // 로그인
+              "/api/signup-customer", // 고객 회원가입
+              "/api/signup-manager", // 매니저 회원가입
+              "/api/store/**", // 상점 목록 조회
+              "/api/review/list/{storeId}", // 리뷰 목록 조회
+              "/api/review/detail/{reviewId}", // 리뷰 상세 조회
+              "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**" // swagger
+            ).permitAll()
+            // 고객만 접근 가능
+            .requestMatchers("/api/reservation/customer/**").hasRole("CUSTOMER") // 예약 관련
+            .requestMatchers(HttpMethod.POST, "/api/review/{reservationId}").hasRole("CUSTOMER") // 리뷰 작성
+            .requestMatchers(HttpMethod.PUT, "/api/review/{reservationId}").hasRole("CUSTOMER") // 리뷰 수정
+            .requestMatchers(HttpMethod.DELETE, "/api/review/{reservationId}")
+            .hasAnyRole("CUSTOMER", "ADMIN") // 리뷰 삭제 (관리자도 가능)
+            // 매니저만 접근 가능
+            .requestMatchers(
+              "/api/store/manager/**", // 상점 관련
+              "/api/reservation/manager/**" // 예약 관련
+            ).hasRole("MANAGER")
+            // 그 외 인증 없이 접근X
+            .anyRequest().authenticated())
 
           // JwtFilter 추가
           .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
