@@ -53,7 +53,7 @@ public class SecurityConfig {
               "/api/signin", // 로그인
               "/api/signup-customer", // 고객 회원가입
               "/api/signup-manager", // 매니저 회원가입
-              "/api/store/**", // 상점 목록 조회
+              "/api/store/detail/{storeId}", // 상점 목록 조회
               "/api/review/list/{storeId}", // 리뷰 목록 조회
               "/api/review/detail/{reviewId}", // 리뷰 상세 조회
               "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**" // swagger
