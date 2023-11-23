@@ -56,7 +56,7 @@ public class SecurityConfig {
             .requestMatchers("/api/reservation/customer/**").hasRole("CUSTOMER")
             .requestMatchers("/api/reservation/manager/**").hasRole("MANAGER")
             .requestMatchers("/api/review/list/{storeId}").permitAll()
-            .requestMatchers("/api/review/{reviewId}").permitAll()
+            .requestMatchers("/api/review/detail/{reviewId}").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/review/{reservationId}").hasRole("CUSTOMER")
             .requestMatchers(HttpMethod.PUT, "/api/review/{reservationId}").hasRole("CUSTOMER")
             .requestMatchers(HttpMethod.DELETE, "/api/review/{reservationId}").hasAnyRole("CUSTOMER", "ADMIN")

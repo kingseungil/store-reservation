@@ -36,7 +36,7 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getReviewList(storeId));
     }
 
-    @GetMapping("{reviewId}")
+    @GetMapping("/detail/{reviewId}")
     @Operation(summary = "리뷰 상세 조회")
     public ResponseEntity<ReviewResponse> getReviewByReviewId(
       @PathVariable Long reviewId
@@ -44,7 +44,7 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getReviewByReviewId(reviewId));
     }
 
-    @PostMapping("{reservationId}")
+    @PostMapping("/reservation/{reservationId}")
     @OnlyCustomer
     @Operation(summary = "리뷰 작성")
     public ResponseEntity<String> writeReview(

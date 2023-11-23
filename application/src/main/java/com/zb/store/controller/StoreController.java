@@ -31,7 +31,7 @@ public class StoreController {
     // 상점 등록
     @OnlyManager
     @Operation(summary = "상점 등록")
-    @PostMapping("/manager")
+    @PostMapping("/manager/register")
     public ResponseEntity<String> registerStore(
       @Valid @RequestBody StoreRequest form) {
         storeServce.registerStore(form);
@@ -68,7 +68,7 @@ public class StoreController {
     }
 
     // 상점 상세 조회
-    @GetMapping("/{storeId}")
+    @GetMapping("/detail/{storeId}")
     @Operation(summary = "상점 상세 조회")
     public ResponseEntity<StoreResponse> getStore(
       @PathVariable("storeId") Long storeId) {
