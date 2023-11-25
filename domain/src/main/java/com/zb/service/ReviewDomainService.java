@@ -19,8 +19,6 @@ public class ReviewDomainService {
 
     /**
      * 리뷰 작성 여부 확인
-     * @param customer    현재 로그인한 고객
-     * @param reservation 예약 정보
      */
     public void checkReviewExist(Customer customer, Reservation reservation) {
         if (reviewRepository.existsByCustomerAndReservation(customer, reservation)) {
@@ -30,9 +28,6 @@ public class ReviewDomainService {
 
     /**
      * 리뷰 작성자인지 확인
-     * @param reviewId 리뷰 ID
-     * @param username 리뷰 작성자 이름
-     * @return 리뷰 엔티티
      */
     public Review getReviewOfCustomer(Long reviewId, String username) {
         return reviewRepository.findById(reviewId)

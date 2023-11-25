@@ -28,7 +28,6 @@ public class StoreController {
 
     private final StoreServce storeServce;
 
-    // 상점 등록
     @OnlyManager
     @Operation(summary = "상점 등록")
     @PostMapping("/manager/register")
@@ -38,7 +37,6 @@ public class StoreController {
         return ResponseEntity.ok("등록 성공");
     }
 
-    // 상점 수정
     @OnlyManager
     @Operation(summary = "상점 수정")
     @PutMapping("/manager/{storeId}")
@@ -49,7 +47,6 @@ public class StoreController {
         return ResponseEntity.ok("수정 성공");
     }
 
-    // 상점 삭제
     @OnlyManager
     @Operation(summary = "상점 삭제")
     @DeleteMapping("/manager/{storeId}")
@@ -60,14 +57,12 @@ public class StoreController {
     }
 
 
-    // 상점 조회
     @GetMapping
     @Operation(summary = "상점 조회")
     public ResponseEntity<Slice<StoreResponse>> getStores(Pageable pageable) {
         return ResponseEntity.ok(storeServce.getStores(pageable));
     }
 
-    // 상점 상세 조회
     @GetMapping("/detail/{storeId}")
     @Operation(summary = "상점 상세 조회")
     public ResponseEntity<StoreResponse> getStore(

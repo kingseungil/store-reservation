@@ -45,9 +45,6 @@ public class AuthServiceImpl implements AuthService {
      * 1. 이미 존재하는지 확인
      * <p>
      * 2. 존재하지 않으면 회원가입
-     * @param form 회원가입 폼
-     * @return 회원가입 결과
-     * @throws CustomException 유저가 이미 존재하는 경우 발생
      */
     @Transactional
     @Override
@@ -83,9 +80,6 @@ public class AuthServiceImpl implements AuthService {
      * 1. 이미 존재하는지 확인
      * <p>
      * 2. 존재하지 않으면 회원가입
-     * @param form 회원가입 폼
-     * @return 회원가입 결과
-     * @throws CustomException 유저가 이미 존재하는 경우 발생
      */
     @Transactional
     @Override
@@ -113,6 +107,12 @@ public class AuthServiceImpl implements AuthService {
                                            .build();
     }
 
+    private static Authority createAuthority(UserRole userRole) {
+        return Authority.builder()
+                        .authorityName(userRole)
+                        .build();
+    }
+
     /**
      * 로그인
      * <p>
@@ -121,9 +121,6 @@ public class AuthServiceImpl implements AuthService {
      * 2. UserDetails에서 비밀번호를 가져와서 입력받은 비밀번호와 비교
      * <p>
      * 3. 비밀번호가 일치하면 토큰 생성
-     * @param form 로그인 폼
-     * @return 토큰
-     * @throws CustomException 비밀번호가 일치하지 않을 경우 발생
      */
     @Override
     public SignIn.SignInResponse signIn(SignInRequest form) {
@@ -141,11 +138,6 @@ public class AuthServiceImpl implements AuthService {
                                     .build();
     }
 
-    private static Authority createAuthority(UserRole userRole) {
-        return Authority.builder()
-                        .authorityName(userRole)
-                        .build();
-    }
 
     private void checkPassword(SignInRequest form, UserDetails userDetails) {
         if (!passwordEncoder.matches(form.getPassword(), userDetails.getPassword())) {

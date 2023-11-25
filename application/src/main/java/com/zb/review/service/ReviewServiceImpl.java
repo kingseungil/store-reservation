@@ -31,8 +31,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     /**
      * 리뷰 작성
-     * @param reservationId 예약 ID
-     * @param form          리뷰 정보
      */
     @Override
     @Transactional
@@ -57,8 +55,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     /**
      * 리뷰 수정
-     * @param reviewId 리뷰 ID
-     * @param form     리뷰 정보
      */
     @Override
     @Transactional
@@ -72,7 +68,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     /**
      * 리뷰 삭제
-     * @param reviewId 리뷰 ID
      */
     @Override
     @Transactional
@@ -91,8 +86,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     /**
      * 상점 리뷰 조회
-     * @param storeId 상점 ID
-     * @return 리뷰 목록
      */
     @Override
     @Transactional(readOnly = true)
@@ -105,8 +98,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     /**
      * 리뷰 조회
-     * @param reviewId 리뷰 ID
-     * @return 리뷰 정보
      */
     @Override
     @Transactional(readOnly = true)

@@ -28,7 +28,6 @@ public class StoreServiceImpl implements StoreServce {
 
     /**
      * 상점 등록
-     * @param form 상점 등록 정보
      */
     @Override
     @Transactional
@@ -45,7 +44,6 @@ public class StoreServiceImpl implements StoreServce {
 
     /**
      * 상점 수정
-     * @param form 상점 수정 정보
      */
     @Override
     @Transactional
@@ -67,7 +65,6 @@ public class StoreServiceImpl implements StoreServce {
 
     /**
      * 전체 상점 조회
-     * @return 상점 목록
      */
     @Override
     @Transactional(readOnly = true)
@@ -84,8 +81,6 @@ public class StoreServiceImpl implements StoreServce {
 
     /**
      * 상점 상세 조회
-     * @param storeId 상점 아이디
-     * @return 상점 상세 정보
      */
     @Override
     @Transactional(readOnly = true)

@@ -18,7 +18,6 @@ public class CustomerDomainService {
 
     /**
      * 현재 로그인한 고객 조회
-     * @return 현재 로그인한 고객
      */
     public Customer getLoggedInCustomer() {
         String username = SecurityUtil.getCurrentUsername();

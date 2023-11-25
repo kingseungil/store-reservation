@@ -25,9 +25,6 @@ public class ReservationDomainService {
      * - 리뷰 작성이 가능한 상태인지 확인
      * <p>
      * - 예약자인지 확인
-     * @param reservationId 예약 ID
-     * @param customerId    고객 ID
-     * @return 예약 엔티티
      */
     @Transactional(readOnly = true)
     public Reservation getReservationForReivew(Long reservationId, Long customerId) {
@@ -40,8 +37,6 @@ public class ReservationDomainService {
 
     /**
      * 이미 존재하는 예약인지 확인
-     * @param storeId         상점 ID
-     * @param reservationDate 예약 날짜
      */
     public void checkExistReservation(Long storeId, LocalDateTime reservationDate) {
         if (reservationRepository.existsByReservationDateAndStoreId(reservationDate, storeId)) {
@@ -51,9 +46,6 @@ public class ReservationDomainService {
 
     /**
      * 예약자인지 확인
-     * @param reservationId 예약 ID
-     * @param username      예약자 이름
-     * @return 예약 엔티티
      */
     @Transactional(readOnly = true)
     public Reservation getReservationOfCustomer(Long reservationId, String username) {
@@ -67,9 +59,6 @@ public class ReservationDomainService {
 
     /**
      * 자기 매장인지 확인
-     * @param reservationId 예약 ID
-     * @param managerName   매니저 이름
-     * @return 예약 엔티티
      */
     @Transactional(readOnly = true)
     public Reservation getStoreOfManager(Long reservationId, String managerName) {

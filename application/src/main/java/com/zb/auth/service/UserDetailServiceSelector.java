@@ -29,8 +29,6 @@ public class UserDetailServiceSelector {
 
     /**
      * 유저 타입에 따라 UserDetailsService를 선택
-     * @param role 유저 타입
-     * @return UserDetailsService 구현체
      */
     public UserDetailsService select(UserRole role) {
         UserDetailsService userDetailsService = userDetailsServiceMap.get(role);

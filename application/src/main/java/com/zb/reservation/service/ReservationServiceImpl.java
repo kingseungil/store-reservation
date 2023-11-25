@@ -38,8 +38,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     /**
      * 상점 예약
-     * @param storeId 상점 ID
-     * @param form    예약 정보
      */
     @Override
     @Transactional
@@ -59,8 +57,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     /**
      * 예약 조회 (예약 ID로)
-     * @param reservationId 예약 ID
-     * @return 예약 정보
      */
     @Override
     @Transactional(readOnly = true)
@@ -76,7 +72,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     /**
      * 예약 취소
-     * @param reservationId 예약 ID
      */
     @Override
     @Transactional
@@ -91,7 +86,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     /**
      * 도착 처리
-     * @param reservationId 예약 ID
      */
     @Override
     @Transactional
@@ -107,25 +101,7 @@ public class ReservationServiceImpl implements ReservationService {
     /* 매니저용 */
 
     /**
-     * 예약 조회 (상점별)
-     * @param storeId 상점 ID
-     * @return 예약 목록 List
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<ReservationsResponse> getReservationsByStoreId(Long storeId) {
-        List<Reservation> reservations = reservationRepository.findByStoreIdOrderByReservationDateAsc(
-          storeId);
-
-        return groupReservationsByDate(reservations).entrySet().stream()
-                                                    .map(this::createReservationsResponse)
-                                                    .toList();
-    }
-
-
-    /**
      * 예약 수락
-     * @param reservationId 예약 ID
      */
     @Override
     @Transactional
@@ -140,7 +116,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     /**
      * 예약 거절
-     * @param reservationId 예약 ID
      */
     @Override
     @Transactional
@@ -152,6 +127,20 @@ public class ReservationServiceImpl implements ReservationService {
         // 예약 상태 변경
         dbReservation.reject();
 
+    }
+
+    /**
+     * 예약 조회 (상점별)
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<ReservationsResponse> getReservationsByStoreId(Long storeId) {
+        List<Reservation> reservations = reservationRepository.findByStoreIdOrderByReservationDateAsc(
+          storeId);
+
+        return groupReservationsByDate(reservations).entrySet().stream()
+                                                    .map(this::createReservationsResponse)
+                                                    .toList();
     }
 
     // 예약 날짜별로 그룹핑

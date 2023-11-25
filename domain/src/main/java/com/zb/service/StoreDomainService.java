@@ -23,7 +23,6 @@ public class StoreDomainService {
 
     /**
      * 이미 존재하는 상점인지 확인
-     * @param storeName 상점 이름
      */
     public void checkExistStore(String storeName) {
         storeRepository.findByStoreName(storeName)
@@ -34,8 +33,6 @@ public class StoreDomainService {
 
     /**
      * 현재 로그인한 사용자가 관리하는 상점 조회
-     * @param storeId 상점 ID
-     * @return 상점 엔티티
      */
     public Store getStoreManagedByCurrentUser(Long storeId) {
         String currentUsername = SecurityUtil.getCurrentUsername();
