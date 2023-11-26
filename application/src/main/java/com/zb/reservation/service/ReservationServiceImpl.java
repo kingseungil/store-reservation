@@ -65,6 +65,7 @@ public class ReservationServiceImpl implements ReservationService {
                                                        .orElseThrow(() -> new CustomException(NOT_EXISTED_RESERVATION));
 
         return ReservationResponse.builder()
+                                  .id(reservation.getId())
                                   .reservationDate(reservation.getReservationDate())
                                   .info(Reservation.to(reservation))
                                   .build();
@@ -154,6 +155,7 @@ public class ReservationServiceImpl implements ReservationService {
     private ReservationsResponse createReservationsResponse(Map.Entry<LocalDate, List<Reservation>> entry) {
         List<ReservationTimeTable> timeTable = createTimeTable(entry.getValue());
         return ReservationsResponse.builder()
+                                   .id(entry.getValue().get(0).getId())
                                    .reservationDate(entry.getKey().atStartOfDay())
                                    .timeTable(timeTable)
                                    .build();

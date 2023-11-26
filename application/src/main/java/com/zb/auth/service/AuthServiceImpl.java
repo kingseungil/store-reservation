@@ -67,6 +67,7 @@ public class AuthServiceImpl implements AuthService {
         customerRepository.save(customer);
 
         return SignUpResponse.builder()
+                             .id(customer.getCustomerId())
                              .username(customer.getUsername())
                              .phoneNumber(customer.getPhoneNumber())
                              .authority(customer.getAuthority().getAuthorityName())
@@ -101,6 +102,7 @@ public class AuthServiceImpl implements AuthService {
         managerRepository.save(manager);
 
         return SignUpManager.SignUpResponse.builder()
+                                           .id(manager.getManagerId())
                                            .username(manager.getUsername())
                                            .phoneNumber(manager.getPhoneNumber())
                                            .authority(manager.getAuthority().getAuthorityName())

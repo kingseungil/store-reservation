@@ -33,7 +33,7 @@ public class Store extends BaseEntity {
     @Id
     @Column(name = "store_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long storeId;
 
     @Column(name = "store_name", length = 50)
     private String storeName;
@@ -47,6 +47,9 @@ public class Store extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "manager_id")
     private Manager manager;
+
+    @OneToMany(mappedBy = "store")
+    private List<Reservation> reservations = new ArrayList<>();
 
     @OneToMany(mappedBy = "store")
     private List<Review> reviews = new ArrayList<>();
@@ -67,7 +70,7 @@ public class Store extends BaseEntity {
                             .storeName(store.getStoreName())
                             .location(store.getLocation())
                             .description(store.getDescription())
-                            .manager(ManagerInfoDto.from(store.getManager().getUsername()))
+                            .manager(ManagerInfoDto.from(store.getManager()))
                             .build();
     }
 

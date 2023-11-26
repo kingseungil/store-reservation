@@ -68,6 +68,7 @@ public class AuthDto {
         @Builder
         public static class SignUpResponse {
 
+            private Long id;
             private String username;
             private String phoneNumber;
             private UserRole authority;
@@ -102,6 +103,7 @@ public class AuthDto {
         @Builder
         public static class SignUpResponse {
 
+            private Long id;
             private String username;
             private String phoneNumber;
             private UserRole authority;

@@ -45,6 +45,7 @@ public class ReservationDto {
     @Builder
     public static class ReservationsResponse {
 
+        private Long id;
         private LocalDateTime reservationDate;
         private List<ReservationTimeTable> timeTable;
     }
@@ -56,6 +57,7 @@ public class ReservationDto {
     @Builder
     public static class ReservationResponse {
 
+        private Long id;
         private LocalDateTime reservationDate;
         private ReservationDto.Info info;
 

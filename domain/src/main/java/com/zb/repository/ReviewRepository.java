@@ -11,10 +11,12 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
+    @Query("select (count(r) > 0) from Review r where r.customer = :customer and r.reservation = :reservation")
     boolean existsByCustomerAndReservation(Customer customer, Reservation reservation);
 
+    @Query("select r from Review r where r.store.storeId = :storeId order by r.createdAt DESC")
     @EntityGraph(attributePaths = {"customer", "store"})
-    List<Review> findAllByStoreId(Long storeId);
+    List<Review> findAllByStoreIdOrderByCreatedAtDesc(Long storeId);
 
     @EntityGraph(attributePaths = {"customer", "store"})
     @Override
@@ -24,6 +26,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Override
     void deleteById(Long reviewId);
 
-    @Query("SELECT AVG(r.rating) FROM Review r WHERE r.store.id = :storeId")
+    @Query("SELECT AVG(r.rating) FROM Review r WHERE r.store.storeId = :storeId")
     Optional<Double> findAverageRatingByStoreId(Long storeId);
 }

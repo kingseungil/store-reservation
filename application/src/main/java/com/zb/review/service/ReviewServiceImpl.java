@@ -96,7 +96,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     @Cacheable(value = "reviewList", key = "'storeId:' + #storeId")
     public List<ReviewResponse> getReviewList(Long storeId) {
-        return reviewRepository.findAllByStoreId(storeId).stream()
+        return reviewRepository.findAllByStoreIdOrderByCreatedAtDesc(storeId).stream()
                                .map(Review::to)
                                .map(ReviewResponse::new)
                                .toList();

@@ -66,9 +66,8 @@ public class Review extends BaseEntity {
         return ReviewDto.Info.builder()
                              .content(review.getContent())
                              .rating(review.getRating())
-                             .customer(CustomerInfoDto.from(review.getCustomer().getUsername()))
-                             .store(
-                               StoreInfoDto.from(review.getStore().getStoreName(), review.getStore().getLocation()))
+                             .customer(CustomerInfoDto.from(review.getCustomer()))
+                             .store(StoreInfoDto.from(review.getStore(), review.getReservation().getStatus()))
                              .build();
     }
 
@@ -77,6 +76,5 @@ public class Review extends BaseEntity {
         this.content = form.getContent();
         this.rating = form.getRating();
     }
-
 
 }

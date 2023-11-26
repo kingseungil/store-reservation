@@ -1,5 +1,6 @@
 package com.zb.dto.store;
 
+import com.zb.entity.Store;
 import com.zb.type.ReservationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,24 +15,20 @@ import lombok.Setter;
 @AllArgsConstructor
 public class StoreInfoDto {
 
+    private Long id;
     private String storeName;
     private String location;
     private ReservationStatus status;
 
-    
-    public static StoreInfoDto from(String storeName, String location, ReservationStatus status) {
+
+    public static StoreInfoDto from(Store store, ReservationStatus status) {
         return StoreInfoDto.builder()
-                           .storeName(storeName)
-                           .location(location)
+                           .id(store.getStoreId())
+                           .storeName(store.getStoreName())
+                           .location(store.getLocation())
                            .status(status)
                            .build();
     }
 
-    public static StoreInfoDto from(String storeName, String location) {
-        return StoreInfoDto.builder()
-                           .storeName(storeName)
-                           .location(location)
-                           .build();
-    }
 }
 
