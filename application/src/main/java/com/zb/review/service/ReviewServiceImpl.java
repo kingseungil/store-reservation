@@ -17,6 +17,8 @@ import com.zb.service.ReviewDomainService;
 import com.zb.util.SecurityUtil;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +36,8 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     @Transactional
-    public void writeReview(Long reservationId, ReviewRequest form) {
+    @CacheEvict(value = "reviewList", key = "'storeId:' + #storeId")
+    public void writeReview(Long storeId, Long reservationId, ReviewRequest form) {
         // 현재 로그인한 고객 조회
         Customer customer = customerDomainService.getLoggedInCustomer();
 
@@ -58,7 +61,8 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     @Transactional
-    public void modifyReview(Long reviewId, ReviewRequest form) {
+    @CacheEvict(value = "reviewList", key = "'storeId:' + #storeId")
+    public void modifyReview(Long storeId, Long reviewId, ReviewRequest form) {
         // 자신의 리뷰인지 확인
         Review dbReview = reviewDomainService.getReviewOfCustomer(reviewId,
           SecurityUtil.getCurrentUsername());
@@ -71,7 +75,8 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     @Transactional
-    public void deleteReview(Long reviewId) {
+    @CacheEvict(value = "reviewList", key = "'storeId:' + #storeId")
+    public void deleteReview(Long storeId, Long reviewId) {
         if (SecurityUtil.hasRole(ROLE_ADMIN)) {
             // 관리자인 경우 바로 리뷰 삭제
             reviewRepository.deleteById(reviewId);
@@ -89,6 +94,7 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "reviewList", key = "'storeId:' + #storeId")
     public List<ReviewResponse> getReviewList(Long storeId) {
         return reviewRepository.findAllByStoreId(storeId).stream()
                                .map(Review::to)

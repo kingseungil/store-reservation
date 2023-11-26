@@ -44,35 +44,38 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getReviewByReviewId(reviewId));
     }
 
-    @PostMapping("/reservation/{reservationId}")
+    @PostMapping("/reservation/{storeId}/{reservationId}")
     @OnlyCustomer
     @Operation(summary = "리뷰 작성")
     public ResponseEntity<String> writeReview(
+      @PathVariable Long storeId,
       @PathVariable Long reservationId,
       @Valid @RequestBody ReviewRequest form
     ) {
-        reviewService.writeReview(reservationId, form);
+        reviewService.writeReview(storeId, reservationId, form);
         return ResponseEntity.ok("리뷰 작성 완료");
     }
 
-    @PutMapping("{reviewId}")
+    @PutMapping("/{storeId}/{reviewId}")
     @OnlyCustomer
     @Operation(summary = "리뷰 수정")
     public ResponseEntity<String> modifyReview(
+      @PathVariable Long storeId,
       @PathVariable Long reviewId,
       @Valid @RequestBody ReviewRequest form
     ) {
-        reviewService.modifyReview(reviewId, form);
+        reviewService.modifyReview(storeId, reviewId, form);
         return ResponseEntity.ok("리뷰 수정 완료");
     }
 
-    @DeleteMapping("{reviewId}")
+    @DeleteMapping("/{storeId}/{reviewId}")
     @CustomerOrAdmin
     @Operation(summary = "리뷰 삭제")
     public ResponseEntity<String> deleteReview(
+      @PathVariable Long storeId,
       @PathVariable Long reviewId
     ) {
-        reviewService.deleteReview(reviewId);
+        reviewService.deleteReview(storeId, reviewId);
         return ResponseEntity.ok("리뷰 삭제 완료");
     }
 

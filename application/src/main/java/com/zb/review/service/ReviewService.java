@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface ReviewService {
 
-    void writeReview(Long reservationId, ReviewRequest form);
+    void writeReview(Long storeId, Long reservationId, ReviewRequest form);
 
-    void modifyReview(Long reviewId, ReviewRequest form);
+    void modifyReview(Long storeId, Long reviewId, ReviewRequest form);
 
-    void deleteReview(Long reviewId);
+    void deleteReview(Long storeId, Long reviewId);
 
     List<ReviewResponse> getReviewList(Long storeId);
 

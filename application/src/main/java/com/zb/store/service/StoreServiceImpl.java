@@ -12,6 +12,8 @@ import com.zb.repository.StoreRepository;
 import com.zb.service.ManagerDomainService;
 import com.zb.service.StoreDomainService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -47,6 +49,7 @@ public class StoreServiceImpl implements StoreServce {
      */
     @Override
     @Transactional
+    @CacheEvict(value = "storeInfo", key = "'storeId:' + #storeId")
     public void updateStore(StoreRequest form, Long storeId) {
         // 상점 조회 (권한 확인)
         Store store = storeDomainService.getStoreManagedByCurrentUser(storeId);
@@ -56,6 +59,7 @@ public class StoreServiceImpl implements StoreServce {
 
     @Override
     @Transactional
+    @CacheEvict(value = "storeInfo", key = "'storeId:' + #storeId")
     public void deleteStore(Long storeId) {
         // 상점 조회 (권한 확인)
         Store store = storeDomainService.getStoreManagedByCurrentUser(storeId);
@@ -84,6 +88,7 @@ public class StoreServiceImpl implements StoreServce {
      */
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "storeInfo", key = "'storeId:' + #storeId")
     public StoreResponse getStore(Long storeId) {
         Store store = storeRepository.findById(storeId)
                                      .orElseThrow(() -> new CustomException(NOT_EXISTED_STORE));

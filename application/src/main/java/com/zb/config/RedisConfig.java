@@ -1,5 +1,8 @@
 package com.zb.config;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 import java.time.Duration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,8 +13,7 @@ import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -24,15 +26,31 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private String port;
 
+//    @Bean
+//    public RedisTemplate<String, Object> redisTemplate() {
+//        RedisTemplate<String, Object> template = new RedisTemplate<>();
+//        template.setConnectionFactory(redisConnectionFactory());
+//        template.setKeySerializer(new StringRedisSerializer());
+//
+//        // 직렬화할 클래스 설정
+//
+//        return template;
+//    }
+
     @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactory());
-        template.setKeySerializer(new StringRedisSerializer());
+    public Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer() {
+        ObjectMapper om = new ObjectMapper();
+        om.activateDefaultTyping(
+          om.getPolymorphicTypeValidator(), // 역직렬화 시 타입을 검증할 수 있는 기능
+          DefaultTyping.NON_FINAL, // 역직렬화 시 타입 정보를 포함하도록 설정
+          As.WRAPPER_ARRAY // 역직렬화 시 타입 정보를 어떤 형태로 포함할지 설정
+        );
 
-        // 직렬화할 클래스 설정
+        Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(
+          Object.class);
+        serializer.serialize(om);
 
-        return template;
+        return serializer;
     }
 
     @Bean
@@ -55,7 +73,8 @@ public class RedisConfig {
                                                               .serializeValuesWith(
                                                                 RedisSerializationContext.SerializationPair
                                                                   .fromSerializer(
-                                                                    new GenericJackson2JsonRedisSerializer())); // redis 캐시 데이터 저장시 value에 대한 직렬화 설정
+                                                                    jackson2JsonRedisSerializer())); // redis 캐시 데이터 저장시 value에 대한 직렬화 설정
+
         return RedisCacheManager.builder(RedisCacheWriter.lockingRedisCacheWriter(redisConnectionFactory))
                                 .cacheDefaults(conf)
                                 .build();

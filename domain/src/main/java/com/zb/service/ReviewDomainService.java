@@ -1,6 +1,7 @@
 package com.zb.service;
 
 import static com.zb.type.ErrorCode.ALREADY_WRITTEN_REVIEW;
+import static com.zb.type.ErrorCode.NOT_EXISTED_REVIEW;
 import static com.zb.type.ErrorCode.NOT_REVIEW_OWNER;
 
 import com.zb.entity.Customer;
@@ -30,8 +31,13 @@ public class ReviewDomainService {
      * 리뷰 작성자인지 확인
      */
     public Review getReviewOfCustomer(Long reviewId, String username) {
-        return reviewRepository.findById(reviewId)
-                               .filter(review -> review.getCustomer().getUsername().equals(username))
-                               .orElseThrow(() -> new CustomException(NOT_REVIEW_OWNER));
+        Review review = reviewRepository.findById(reviewId)
+                                        .orElseThrow(() -> new CustomException(NOT_EXISTED_REVIEW));
+
+        if (!review.getCustomer().getUsername().equals(username)) {
+            throw new CustomException(NOT_REVIEW_OWNER);
+        }
+
+        return review;
     }
 }
