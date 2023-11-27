@@ -5,7 +5,7 @@ import static com.zb.type.ErrorCode.USER_NOT_FOUND;
 
 import com.zb.entity.Manager;
 import com.zb.exception.CustomException;
-import com.zb.repository.ManagerRepository;
+import com.zb.repository.ManagerQueryRepository;
 import java.util.Collections;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class ManagerUserDetailsService implements UserDetailsService {
 
-    private final ManagerRepository managerRepository;
+    private final ManagerQueryRepository managerQueryRepository;
 
     /**
      * 주어진 사용자 이름에 해당하는 사용자의 인증 정보를 로드합니다. 사용자 이름에 해당하는 사용자가 존재하지 않는 경우, CustomException이 발생합니다.
@@ -30,11 +30,11 @@ public class ManagerUserDetailsService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return managerRepository.findByUsername(username)
-                                .map(this::createUser)
-                                .orElseThrow(
-                                  () -> new CustomException(USER_NOT_FOUND)
-                                );
+        return managerQueryRepository.findByUsername(username)
+                                     .map(this::createUser)
+                                     .orElseThrow(
+                                       () -> new CustomException(USER_NOT_FOUND)
+                                     );
     }
 
     /**

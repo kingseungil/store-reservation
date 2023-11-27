@@ -1,5 +1,7 @@
 package com.zb.dto.auth;
 
+import com.zb.entity.Customer;
+import com.zb.entity.Manager;
 import com.zb.type.UserRole;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -72,6 +74,15 @@ public class AuthDto {
             private String username;
             private String phoneNumber;
             private UserRole authority;
+
+            public static SignUpResponse from(Customer customer) {
+                return SignUpResponse.builder()
+                                     .id(customer.getCustomerId())
+                                     .username(customer.getUsername())
+                                     .phoneNumber(customer.getPhoneNumber())
+                                     .authority(customer.getAuthority().getAuthorityName())
+                                     .build();
+            }
         }
     }
 
@@ -107,6 +118,16 @@ public class AuthDto {
             private String username;
             private String phoneNumber;
             private UserRole authority;
+
+            public static SignUpResponse from(Manager manager) {
+                return SignUpResponse.builder()
+                                     .id(manager.getManagerId())
+                                     .username(manager.getUsername())
+                                     .phoneNumber(manager.getPhoneNumber())
+                                     .authority(manager.getAuthority().getAuthorityName())
+                                     .build();
+            }
         }
+
     }
 }

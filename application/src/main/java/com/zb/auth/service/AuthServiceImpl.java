@@ -16,7 +16,9 @@ import com.zb.entity.Authority;
 import com.zb.entity.Customer;
 import com.zb.entity.Manager;
 import com.zb.exception.CustomException;
+import com.zb.repository.CustomerQueryRepository;
 import com.zb.repository.CustomerRepository;
+import com.zb.repository.ManagerQueryRepository;
 import com.zb.repository.ManagerRepository;
 import com.zb.type.UserRole;
 import com.zb.util.SecurityUtil;
@@ -33,7 +35,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthServiceImpl implements AuthService {
 
     private final CustomerRepository customerRepository;
+    private final CustomerQueryRepository customerQueryRepository;
     private final ManagerRepository managerRepository;
+    private final ManagerQueryRepository managerQueryRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailServiceSelector userDetailServiceSelector;
@@ -49,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     @Override
     public SignUpResponse signUpCustomer(SignUpCustomer.SignUpRequest form) {
-        if (customerRepository.findByUsername(form.getUsername()).isPresent()) {
+        if (customerQueryRepository.existsByUsername(form.getUsername())) {
             throw new CustomException(ALREADY_EXISTED_USER);
         }
 
@@ -66,12 +70,7 @@ public class AuthServiceImpl implements AuthService {
         // 회원 저장
         customerRepository.save(customer);
 
-        return SignUpResponse.builder()
-                             .id(customer.getCustomerId())
-                             .username(customer.getUsername())
-                             .phoneNumber(customer.getPhoneNumber())
-                             .authority(customer.getAuthority().getAuthorityName())
-                             .build();
+        return SignUpResponse.from(customer);
     }
 
 
@@ -85,7 +84,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     @Override
     public SignUpManager.SignUpResponse signUpManager(SignUpRequest form) {
-        if (managerRepository.findByUsername(form.getUsername()).isPresent()) {
+        if (managerQueryRepository.existsByUsername(form.getUsername())) {
             throw new CustomException(ALREADY_EXISTED_USER);
         }
 
@@ -101,12 +100,7 @@ public class AuthServiceImpl implements AuthService {
         // 회원 저장
         managerRepository.save(manager);
 
-        return SignUpManager.SignUpResponse.builder()
-                                           .id(manager.getManagerId())
-                                           .username(manager.getUsername())
-                                           .phoneNumber(manager.getPhoneNumber())
-                                           .authority(manager.getAuthority().getAuthorityName())
-                                           .build();
+        return SignUpManager.SignUpResponse.from(manager);
     }
 
     private static Authority createAuthority(UserRole userRole) {
