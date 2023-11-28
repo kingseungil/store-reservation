@@ -2,15 +2,17 @@ package com.zb.store.service;
 
 import static com.zb.type.ErrorCode.NOT_EXISTED_STORE;
 
+import com.querydsl.core.Tuple;
 import com.zb.dto.store.StoreDto.StoreRequest;
 import com.zb.dto.store.StoreDto.StoreResponse;
 import com.zb.entity.Manager;
 import com.zb.entity.Store;
 import com.zb.exception.CustomException;
-import com.zb.repository.ReviewRepository;
 import com.zb.repository.StoreRepository;
+import com.zb.repository.queryDsl.StoreQueryRepository;
 import com.zb.service.ManagerDomainService;
 import com.zb.service.StoreDomainService;
+import com.zb.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -24,9 +26,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class StoreServiceImpl implements StoreServce {
 
     private final StoreRepository storeRepository;
-    private final ReviewRepository reviewRepository;
+    private final StoreQueryRepository storeQueryRepository;
     private final StoreDomainService storeDomainService;
     private final ManagerDomainService managerDomainService;
+
+    private String loggedInUsername;
+
 
     /**
      * 상점 등록
@@ -51,20 +56,22 @@ public class StoreServiceImpl implements StoreServce {
     @Transactional
     @CacheEvict(value = "storeInfo", key = "'storeId:' + #storeId")
     public void updateStore(StoreRequest form, Long storeId) {
-        // 상점 조회 (권한 확인)
-        Store store = storeDomainService.getStoreManagedByCurrentUser(storeId);
+        // 상점 수정할 수 있는지 확인
+        loggedInUsername = SecurityUtil.getCurrentUsername();
+        storeDomainService.checkCanUpdateStore(storeId, loggedInUsername);
         // 상점 수정
-        store.updateStore(form);
+        storeQueryRepository.updateStore(form, storeId);
     }
 
     @Override
     @Transactional
     @CacheEvict(value = "storeInfo", key = "'storeId:' + #storeId")
     public void deleteStore(Long storeId) {
-        // 상점 조회 (권한 확인)
-        Store store = storeDomainService.getStoreManagedByCurrentUser(storeId);
+        // 상점 삭제할 수 있는지 확인
+        loggedInUsername = SecurityUtil.getCurrentUsername();
+        storeDomainService.checkCanUpdateStore(storeId, loggedInUsername);
         // 상점 삭제
-        storeRepository.delete(store);
+        storeQueryRepository.deleteStore(storeId);
     }
 
     /**
@@ -73,14 +80,8 @@ public class StoreServiceImpl implements StoreServce {
     @Override
     @Transactional(readOnly = true)
     public Slice<StoreResponse> getStores(Pageable pageable) {
-        return storeRepository.findAllWithAverageRating(pageable)
-                              .map(result -> {
-                                  Store store = (Store) result[0];
-                                  Double averageRating = (Double) result[1];
-                                  StoreResponse response = new StoreResponse(Store.to(store));
-                                  response.getInfo().setRating(averageRating == null ? 0 : averageRating);
-                                  return response;
-                              });
+        return storeQueryRepository.findAllWithAverageRating(pageable)
+                                   .map(StoreServiceImpl::convertToStoreResponse);
     }
 
     /**
@@ -90,13 +91,16 @@ public class StoreServiceImpl implements StoreServce {
     @Transactional(readOnly = true)
     @Cacheable(value = "storeInfo", key = "'storeId:' + #storeId")
     public StoreResponse getStore(Long storeId) {
-        Store store = storeRepository.findById(storeId)
-                                     .orElseThrow(() -> new CustomException(NOT_EXISTED_STORE));
-
-        Double avergaRating = reviewRepository.findAverageRatingByStoreId(storeId).orElse(0.0);
-        StoreResponse response = new StoreResponse(Store.to(store));
-        response.getInfo().setRating(avergaRating);
-        return response;
+        return storeQueryRepository.findByIdWithAverageRating(storeId)
+                                   .map(StoreServiceImpl::convertToStoreResponse)
+                                   .orElseThrow(() -> new CustomException(NOT_EXISTED_STORE));
     }
 
+    private static StoreResponse convertToStoreResponse(Tuple result) {
+        Store store = result.get(0, Store.class);
+        Double averageRating = result.get(1, Double.class);
+        StoreResponse response = new StoreResponse(Store.to(store));
+        response.getInfo().setRating(averageRating == null ? 0 : averageRating);
+        return response;
+    }
 }

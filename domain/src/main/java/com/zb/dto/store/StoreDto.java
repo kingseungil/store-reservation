@@ -31,6 +31,7 @@ public class StoreDto {
     @Builder
     public static class Info {
 
+        private Long id;
         private String storeName;
         private String location;
         private String description;

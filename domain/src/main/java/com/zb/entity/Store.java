@@ -67,6 +67,7 @@ public class Store extends BaseEntity {
     // to
     public static StoreDto.Info to(Store store) {
         return StoreDto.Info.builder()
+                            .id(store.getStoreId())
                             .storeName(store.getStoreName())
                             .location(store.getLocation())
                             .description(store.getDescription())

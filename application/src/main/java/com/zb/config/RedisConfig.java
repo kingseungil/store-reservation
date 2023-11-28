@@ -1,8 +1,5 @@
 package com.zb.config;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 import java.time.Duration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +10,7 @@ import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -37,20 +34,21 @@ public class RedisConfig {
 //        return template;
 //    }
 
+    //    @Bean
+//    public Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer() {
+//        ObjectMapper om = new ObjectMapper();
+//        om.activateDefaultTyping(
+//          om.getPolymorphicTypeValidator(), // 역직렬화 시 타입을 검증할 수 있는 기능
+//          DefaultTyping.NON_FINAL, // 역직렬화 시 타입 정보를 포함하도록 설정
+//          As.WRAPPER_ARRAY // 역직렬화 시 타입 정보를 배열 형태로 포함하도록 설정
+//        );
+//
+//        return new Jackson2JsonRedisSerializer<>(om, Object.class);
+//    }
     @Bean
-    public Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer() {
-        ObjectMapper om = new ObjectMapper();
-        om.activateDefaultTyping(
-          om.getPolymorphicTypeValidator(), // 역직렬화 시 타입을 검증할 수 있는 기능
-          DefaultTyping.NON_FINAL, // 역직렬화 시 타입 정보를 포함하도록 설정
-          As.WRAPPER_ARRAY // 역직렬화 시 타입 정보를 어떤 형태로 포함할지 설정
-        );
+    public GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer() {
 
-        Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(
-          Object.class);
-        serializer.serialize(om);
-
-        return serializer;
+        return new GenericJackson2JsonRedisSerializer();
     }
 
     @Bean
@@ -73,7 +71,7 @@ public class RedisConfig {
                                                               .serializeValuesWith(
                                                                 RedisSerializationContext.SerializationPair
                                                                   .fromSerializer(
-                                                                    jackson2JsonRedisSerializer())); // redis 캐시 데이터 저장시 value에 대한 직렬화 설정
+                                                                    genericJackson2JsonRedisSerializer())); // redis 캐시 데이터 저장시 value에 대한 직렬화 설정
 
         return RedisCacheManager.builder(RedisCacheWriter.lockingRedisCacheWriter(redisConnectionFactory))
                                 .cacheDefaults(conf)
