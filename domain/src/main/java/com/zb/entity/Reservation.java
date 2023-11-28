@@ -1,7 +1,7 @@
 package com.zb.entity;
 
 import static com.zb.type.ErrorCode.CANNOT_WRITE_REVIEW;
-import static com.zb.type.ErrorCode.DONT_CHANGE_RESERVATION_STATUS;
+import static com.zb.type.ErrorCode.CANT_CHANGE_RESERVATION_STATUS;
 import static com.zb.type.ErrorCode.NOT_ARRIVE_TIME;
 import static com.zb.type.ReservationStatus.ACCEPTED;
 import static com.zb.type.ReservationStatus.ARRIVED;
@@ -81,25 +81,25 @@ public class Reservation extends BaseEntity {
     }
 
     // cancel
-    public void cancel() {
+    public void checkStatusForCancel() {
         checkStatus(CANCELED, ARRIVED);
         this.status = CANCELED;
     }
 
     // accept
-    public void accept() {
+    public void checkStatusForAccept() {
         checkStatus(CANCELED, ARRIVED, ACCEPTED);
         this.status = ACCEPTED;
     }
 
     // reject
-    public void reject() {
+    public void checkStatusForReject() {
         checkStatus(CANCELED, ARRIVED, REJECTED);
         this.status = REJECTED;
     }
 
     // arrive
-    public void arrive() {
+    public void checkStatusForArrive() {
         checkStatus(PENDING, CANCELED, REJECTED, ARRIVED);
         // 현재 시간과 예약 시간 비교
         LocalDateTime now = LocalDateTime.now();
@@ -109,7 +109,7 @@ public class Reservation extends BaseEntity {
 
         this.status = ARRIVED;
     }
-
+    
     // arrived 일때만 리뷰 작성 가능
     public void checkStatusForReview() {
         if (this.status != ARRIVED) {
@@ -128,7 +128,7 @@ public class Reservation extends BaseEntity {
     private void checkStatus(ReservationStatus... invalidStatuses) {
         for (ReservationStatus invalidStatus : invalidStatuses) {
             if (this.status == invalidStatus) {
-                throw new CustomException(DONT_CHANGE_RESERVATION_STATUS);
+                throw new CustomException(CANT_CHANGE_RESERVATION_STATUS);
             }
         }
     }

@@ -2,6 +2,10 @@ package com.zb.reservation.service;
 
 import static com.zb.type.ErrorCode.NOT_EXISTED_RESERVATION;
 import static com.zb.type.ErrorCode.NOT_EXISTED_STORE;
+import static com.zb.type.ReservationStatus.ACCEPTED;
+import static com.zb.type.ReservationStatus.ARRIVED;
+import static com.zb.type.ReservationStatus.CANCELED;
+import static com.zb.type.ReservationStatus.REJECTED;
 
 import com.zb.dto.reservation.ReservationDto.ReservationRequest;
 import com.zb.dto.reservation.ReservationDto.ReservationResponse;
@@ -11,6 +15,7 @@ import com.zb.entity.Customer;
 import com.zb.entity.Reservation;
 import com.zb.entity.Store;
 import com.zb.exception.CustomException;
+import com.zb.repository.ReservationQueryRepository;
 import com.zb.repository.ReservationRepository;
 import com.zb.repository.StoreRepository;
 import com.zb.service.CustomerDomainService;
@@ -30,9 +35,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationQueryRepository reservationQueryRepository;
     private final StoreRepository storeRepository;
     private final ReservationDomainService reservationDomainService;
     private final CustomerDomainService customerDomainService;
+    private final String loggedInUsername = SecurityUtil.getCurrentUsername();
 
     /* 손님용 */
 
@@ -45,6 +52,7 @@ public class ReservationServiceImpl implements ReservationService {
         // 현재 로그인한 고객 조회
         Customer customer = customerDomainService.getLoggedInCustomer();
         // 상점 조회
+        // TODO : querydsl로 변경
         Store store = storeRepository.findById(storeId)
                                      .orElseThrow(() -> new CustomException(NOT_EXISTED_STORE));
         // 이미 예약이 있는지 확인
@@ -61,14 +69,11 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional(readOnly = true)
     public ReservationResponse getReservationByReservationId(Long reservationId) {
-        Reservation reservation = reservationRepository.findById(reservationId)
-                                                       .orElseThrow(() -> new CustomException(NOT_EXISTED_RESERVATION));
+        Reservation reservation = reservationQueryRepository.findById(reservationId)
+                                                            .orElseThrow(
+                                                              () -> new CustomException(NOT_EXISTED_RESERVATION));
 
-        return ReservationResponse.builder()
-                                  .id(reservation.getId())
-                                  .reservationDate(reservation.getReservationDate())
-                                  .info(Reservation.to(reservation))
-                                  .build();
+        return ReservationResponse.from(reservation);
     }
 
     /**
@@ -77,12 +82,12 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public void cancelReservation(Long reservationId) {
-        // 자신의 예약인지 확인
-        Reservation dbReservation = reservationDomainService.getReservationOfCustomer(reservationId,
-          SecurityUtil.getCurrentUsername());
+        // 취소할 수 있는지 확인
+        reservationDomainService.checkStatusForCancel(reservationId);
 
         // 예약 취소
-        dbReservation.cancel();
+        reservationQueryRepository.updateReservationStatus(
+          reservationId, loggedInUsername, CANCELED);
     }
 
     /**
@@ -91,12 +96,12 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public void arriveReservation(Long reservationId) {
-        // 자신의 예약인지 확인
-        Reservation dbReservation = reservationDomainService.getReservationOfCustomer(reservationId,
-          SecurityUtil.getCurrentUsername());
+        // 도착 처리할 수 있는지 확인
+        reservationDomainService.checkStatusForArrive(reservationId);
 
         // 예약 도착 처리
-        dbReservation.arrive();
+        reservationQueryRepository.updateReservationStatus(
+          reservationId, loggedInUsername, ARRIVED);
     }
 
     /* 매니저용 */
@@ -107,12 +112,12 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public void acceptReservation(Long reservationId) {
-        // 자기 매장 예약인지 확인
-        Reservation dbReservation = reservationDomainService.getStoreOfManager(reservationId,
-          SecurityUtil.getCurrentUsername());
+        // 예약 수락할 수 있는지 확인
+        reservationDomainService.checkStatusForAccept(reservationId);
 
         // 예약 상태 변경
-        dbReservation.accept();
+        reservationQueryRepository.updateReservationStatus(
+          reservationId, loggedInUsername, ACCEPTED);
     }
 
     /**
@@ -121,13 +126,12 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public void rejectReservation(Long reservationId) {
-        // 자기 매장 예약인지 확인
-        Reservation dbReservation = reservationDomainService.getStoreOfManager(reservationId,
-          SecurityUtil.getCurrentUsername());
+        // 예약 거절할 수 있는지 확인
+        reservationDomainService.checkStatusForReject(reservationId);
 
         // 예약 상태 변경
-        dbReservation.reject();
-
+        reservationQueryRepository.updateReservationStatus(
+          reservationId, loggedInUsername, REJECTED);
     }
 
     /**
@@ -136,7 +140,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional(readOnly = true)
     public List<ReservationsResponse> getReservationsByStoreId(Long storeId) {
-        List<Reservation> reservations = reservationRepository.findByStoreIdOrderByReservationDateAsc(
+        List<Reservation> reservations = reservationQueryRepository.findByStoreIdOrderByReservationDateAsc(
           storeId);
 
         return groupReservationsByDate(reservations).entrySet().stream()
@@ -167,6 +171,7 @@ public class ReservationServiceImpl implements ReservationService {
         return reservations.stream()
                            .map(reservation -> ReservationTimeTable.builder()
                                                                    .time(reservation.getReservationDate().toLocalTime())
+                                                                   .status(reservation.getStatus())
                                                                    .info(Reservation.to(reservation))
                                                                    .build())
                            .sorted(Comparator.comparing(ReservationTimeTable::getTime))

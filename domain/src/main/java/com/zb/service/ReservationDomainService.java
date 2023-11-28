@@ -2,12 +2,10 @@ package com.zb.service;
 
 import static com.zb.type.ErrorCode.ALREADY_EXISTED_RESERVATION;
 import static com.zb.type.ErrorCode.NOT_EXISTED_RESERVATION;
-import static com.zb.type.ErrorCode.NOT_OWNER_STORE;
-import static com.zb.type.ErrorCode.NOT_RESERVATION_OWNER;
 
 import com.zb.entity.Reservation;
 import com.zb.exception.CustomException;
-import com.zb.repository.ReservationRepository;
+import com.zb.repository.ReservationQueryRepository;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReservationDomainService {
 
-    private final ReservationRepository reservationRepository;
+    private final ReservationQueryRepository reservationQueryRepository;
 
     /**
      * 예약 조회 (예약 ID로)
@@ -28,8 +26,9 @@ public class ReservationDomainService {
      */
     @Transactional(readOnly = true)
     public Reservation getReservationForReivew(Long reservationId, Long customerId) {
-        Reservation reservation = reservationRepository.findById(reservationId)
-                                                       .orElseThrow(() -> new CustomException(NOT_EXISTED_RESERVATION));
+        Reservation reservation = reservationQueryRepository.findById(reservationId)
+                                                            .orElseThrow(
+                                                              () -> new CustomException(NOT_EXISTED_RESERVATION));
         reservation.checkStatusForReview();
         reservation.checkReservationOwner(customerId);
         return reservation;
@@ -39,34 +38,52 @@ public class ReservationDomainService {
      * 이미 존재하는 예약인지 확인
      */
     public void checkExistReservation(Long storeId, LocalDateTime reservationDate) {
-        if (reservationRepository.existsByReservationDateAndStoreId(reservationDate, storeId)) {
+        if (reservationQueryRepository.existsByReservationDateAndStoreId(reservationDate, storeId)) {
             throw new CustomException(ALREADY_EXISTED_RESERVATION);
         }
     }
 
     /**
-     * 예약자인지 확인
+     * 예약 취소 가능한지 확인
      */
-    @Transactional(readOnly = true)
-    public Reservation getReservationOfCustomer(Long reservationId, String username) {
-        return reservationRepository.findById(reservationId)
-                                    .filter(reservation -> reservation.getCustomer()
-                                                                      .getUsername()
-                                                                      .equals(username))
-                                    .orElseThrow(() -> new CustomException(NOT_RESERVATION_OWNER));
+    public void checkStatusForCancel(Long reservationId) {
+        Reservation reservation = reservationQueryRepository.findById(reservationId)
+                                                            .orElseThrow(
+                                                              () -> new CustomException(NOT_EXISTED_RESERVATION));
+
+        reservation.checkStatusForCancel();
     }
 
+    /**
+     * 예약 도착 가능한지 확인
+     */
+    public void checkStatusForArrive(Long reservationId) {
+        Reservation reservation = reservationQueryRepository.findById(reservationId)
+                                                            .orElseThrow(
+                                                              () -> new CustomException(NOT_EXISTED_RESERVATION));
+
+        reservation.checkStatusForArrive();
+    }
 
     /**
-     * 자기 매장인지 확인
+     * 예약 수락 가능한지 확인
      */
-    @Transactional(readOnly = true)
-    public Reservation getStoreOfManager(Long reservationId, String managerName) {
-        return reservationRepository.findById(reservationId)
-                                    .filter(reservation -> reservation.getStore()
-                                                                      .getManager()
-                                                                      .getUsername()
-                                                                      .equals(managerName))
-                                    .orElseThrow(() -> new CustomException(NOT_OWNER_STORE));
+    public void checkStatusForAccept(Long reservationId) {
+        Reservation reservation = reservationQueryRepository.findById(reservationId)
+                                                            .orElseThrow(
+                                                              () -> new CustomException(NOT_EXISTED_RESERVATION));
+
+        reservation.checkStatusForAccept();
+    }
+
+    /**
+     * 예약 거절 가능한지 확인
+     */
+    public void checkStatusForReject(Long reservationId) {
+        Reservation reservation = reservationQueryRepository.findById(reservationId)
+                                                            .orElseThrow(
+                                                              () -> new CustomException(NOT_EXISTED_RESERVATION));
+
+        reservation.checkStatusForReject();
     }
 }

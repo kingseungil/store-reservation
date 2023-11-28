@@ -3,6 +3,7 @@ package com.zb.dto.reservation;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.zb.dto.store.StoreInfoDto;
 import com.zb.dto.user.CustomerInfoDto;
+import com.zb.entity.Reservation;
 import com.zb.type.ReservationStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
@@ -60,8 +61,17 @@ public class ReservationDto {
 
         private Long id;
         private LocalDateTime reservationDate;
+        private ReservationStatus status;
         private ReservationDto.Info info;
 
+        public static ReservationResponse from(Reservation reservation) {
+            return ReservationResponse.builder()
+                                      .id(reservation.getId())
+                                      .reservationDate(reservation.getReservationDate())
+                                      .status(reservation.getStatus())
+                                      .info(Reservation.to(reservation))
+                                      .build();
+        }
     }
 
 

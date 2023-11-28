@@ -17,10 +17,11 @@ public class CustomerQueryRepository {
     private final QCustomer customer = QCustomer.customer;
 
     public Optional<Customer> findByUsername(String username) {
+        // TODO : Projections.fields() 사용
         return Optional.ofNullable(queryFactory.select(customer)
                                                .from(customer)
                                                .where(eqUsername(username))
-                                               .fetchOne());
+                                               .fetchFirst());
     }
 
 

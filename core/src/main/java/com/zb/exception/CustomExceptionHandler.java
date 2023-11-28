@@ -19,7 +19,7 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ErrorResponse> handleGlobalException(CustomException e) {
-        log.error(e.getErrorCode() + " is occurred", e);
+        log.error("{}", e.getMessage());
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                                                    .errorCode(e.getErrorCode())

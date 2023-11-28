@@ -32,10 +32,7 @@ public enum ErrorCode {
     NOT_EXISTED_RESERVATION(HttpStatus.NOT_FOUND, "존재하지 않는 예약입니다."),
     NOT_RESERVATION_OWNER(HttpStatus.BAD_REQUEST, "예약의 소유자가 아닙니다."),
     ALREADY_EXISTED_RESERVATION(HttpStatus.BAD_REQUEST, "이미 존재하는 예약입니다."),
-    //    ALREADY_CANCELED_RESERVATION("이미 취소된 예약입니다."),
-//    ALREADY_ARRIVED_RESERVATION("이미 완료된 예약입니다."),
-//    ALREADY_REJECTED_RESERVATION("이미 거절된 예약입니다."),
-    DONT_CHANGE_RESERVATION_STATUS(HttpStatus.BAD_REQUEST, "예약 상태를 변경할 수 없습니다."),
+    CANT_CHANGE_RESERVATION_STATUS(HttpStatus.BAD_REQUEST, "예약 상태를 변경할 수 없습니다."),
     NOT_ARRIVE_TIME(HttpStatus.BAD_REQUEST, "도착 시간이 아닙니다. 10분 전부터 진행할 수 있습니다."),
 
     // review
