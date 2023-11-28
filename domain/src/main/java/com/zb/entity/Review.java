@@ -64,17 +64,13 @@ public class Review extends BaseEntity {
     // to
     public static ReviewDto.Info to(Review review) {
         return ReviewDto.Info.builder()
+                             .id(review.getId())
                              .content(review.getContent())
                              .rating(review.getRating())
+                             .createdAt(review.getCreatedAt())
                              .customer(CustomerInfoDto.from(review.getCustomer()))
                              .store(StoreInfoDto.from(review.getStore()))
                              .build();
     }
-
-    // modify
-    public void modify(ReviewRequest form) {
-        this.content = form.getContent();
-        this.rating = form.getRating();
-    }
-
+    
 }

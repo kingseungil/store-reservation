@@ -1,5 +1,6 @@
-package com.zb.repository;
+package com.zb.repository.queryDsl;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.zb.entity.Manager;
@@ -17,10 +18,20 @@ public class ManagerQueryRepository {
     private final QManager manager = QManager.manager;
 
     public Optional<Manager> findByUsername(String username) {
+        return Optional.ofNullable(queryFactory.select(Projections.fields(Manager.class,
+                                                 manager.managerId,
+                                                 manager.username,
+                                                 manager.phoneNumber))
+                                               .from(manager)
+                                               .where(eqUsername(username))
+                                               .fetchFirst());
+    }
+
+    public Optional<Manager> findByUsernameForSecurity(String username) {
         return Optional.ofNullable(queryFactory.select(manager)
                                                .from(manager)
                                                .where(eqUsername(username))
-                                               .fetchOne());
+                                               .fetchFirst());
     }
 
     public boolean existsByUsername(String username) {

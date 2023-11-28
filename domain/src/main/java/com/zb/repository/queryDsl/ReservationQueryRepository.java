@@ -1,4 +1,4 @@
-package com.zb.repository;
+package com.zb.repository.queryDsl;
 
 import static com.zb.type.ErrorCode.NOT_RESERVATION_OWNER;
 

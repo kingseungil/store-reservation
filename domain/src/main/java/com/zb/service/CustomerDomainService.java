@@ -5,7 +5,7 @@ import static com.zb.type.ErrorCode.USER_NOT_FOUND;
 
 import com.zb.entity.Customer;
 import com.zb.exception.CustomException;
-import com.zb.repository.CustomerQueryRepository;
+import com.zb.repository.queryDsl.CustomerQueryRepository;
 import com.zb.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

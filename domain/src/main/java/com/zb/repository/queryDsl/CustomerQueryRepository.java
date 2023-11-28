@@ -1,5 +1,6 @@
-package com.zb.repository;
+package com.zb.repository.queryDsl;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.zb.entity.Customer;
@@ -17,7 +18,16 @@ public class CustomerQueryRepository {
     private final QCustomer customer = QCustomer.customer;
 
     public Optional<Customer> findByUsername(String username) {
-        // TODO : Projections.fields() 사용
+        return Optional.ofNullable(queryFactory.select(Projections.fields(Customer.class,
+                                                 customer.customerId,
+                                                 customer.username,
+                                                 customer.phoneNumber))
+                                               .from(customer)
+                                               .where(eqUsername(username))
+                                               .fetchFirst());
+    }
+
+    public Optional<Customer> findByUsernameForSecurity(String username) {
         return Optional.ofNullable(queryFactory.select(customer)
                                                .from(customer)
                                                .where(eqUsername(username))

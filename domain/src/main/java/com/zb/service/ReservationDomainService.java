@@ -5,7 +5,7 @@ import static com.zb.type.ErrorCode.NOT_EXISTED_RESERVATION;
 
 import com.zb.entity.Reservation;
 import com.zb.exception.CustomException;
-import com.zb.repository.ReservationQueryRepository;
+import com.zb.repository.queryDsl.ReservationQueryRepository;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

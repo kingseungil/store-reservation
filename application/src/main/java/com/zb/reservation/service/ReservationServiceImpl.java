@@ -15,9 +15,9 @@ import com.zb.entity.Customer;
 import com.zb.entity.Reservation;
 import com.zb.entity.Store;
 import com.zb.exception.CustomException;
-import com.zb.repository.ReservationQueryRepository;
 import com.zb.repository.ReservationRepository;
 import com.zb.repository.StoreRepository;
+import com.zb.repository.queryDsl.ReservationQueryRepository;
 import com.zb.service.CustomerDomainService;
 import com.zb.service.ReservationDomainService;
 import com.zb.util.SecurityUtil;
@@ -39,7 +39,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final StoreRepository storeRepository;
     private final ReservationDomainService reservationDomainService;
     private final CustomerDomainService customerDomainService;
-    private final String loggedInUsername = SecurityUtil.getCurrentUsername();
+    private String loggedInUsername;
 
     /* 손님용 */
 
@@ -82,6 +82,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public void cancelReservation(Long reservationId) {
+        loggedInUsername = SecurityUtil.getCurrentUsername();
         // 취소할 수 있는지 확인
         reservationDomainService.checkStatusForCancel(reservationId);
 
@@ -96,6 +97,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public void arriveReservation(Long reservationId) {
+        loggedInUsername = SecurityUtil.getCurrentUsername();
         // 도착 처리할 수 있는지 확인
         reservationDomainService.checkStatusForArrive(reservationId);
 
@@ -112,6 +114,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public void acceptReservation(Long reservationId) {
+        loggedInUsername = SecurityUtil.getCurrentUsername();
         // 예약 수락할 수 있는지 확인
         reservationDomainService.checkStatusForAccept(reservationId);
 
@@ -126,6 +129,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public void rejectReservation(Long reservationId) {
+        loggedInUsername = SecurityUtil.getCurrentUsername();
         // 예약 거절할 수 있는지 확인
         reservationDomainService.checkStatusForReject(reservationId);
 

@@ -11,6 +11,7 @@ import com.zb.entity.Review;
 import com.zb.entity.Store;
 import com.zb.exception.CustomException;
 import com.zb.repository.ReviewRepository;
+import com.zb.repository.queryDsl.ReviewQueryRepository;
 import com.zb.service.CustomerDomainService;
 import com.zb.service.ReservationDomainService;
 import com.zb.service.ReviewDomainService;
@@ -27,9 +28,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
+    private final ReviewQueryRepository reviewQueryRepository;
     private final ReservationDomainService reservationDomainService;
     private final ReviewDomainService reviewDomainService;
     private final CustomerDomainService customerDomainService;
+    private String loggedInUsername;
 
     /**
      * 리뷰 작성
@@ -46,7 +49,7 @@ public class ReviewServiceImpl implements ReviewService {
           customer.getCustomerId());
 
         // 리뷰 작성 여부 확인
-        reviewDomainService.checkReviewExist(customer, reservation);
+        reviewDomainService.checkReviewExist(customer.getCustomerId(), reservation);
 
         // 해당 상점 조회
         Store store = reservation.getStore();
@@ -63,11 +66,11 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     @CacheEvict(value = "reviewList", key = "'storeId:' + #storeId")
     public void modifyReview(Long storeId, Long reviewId, ReviewRequest form) {
-        // 자신의 리뷰인지 확인
-        Review dbReview = reviewDomainService.getReviewOfCustomer(reviewId,
-          SecurityUtil.getCurrentUsername());
+        loggedInUsername = SecurityUtil.getCurrentUsername();
+        // 리뷰 수정할 수 있는지 확인
+        reviewDomainService.checkCanUpdateReview(reviewId, loggedInUsername);
         // 리뷰 수정
-        dbReview.modify(form);
+        reviewQueryRepository.updateReview(reviewId, form);
     }
 
     /**
@@ -81,11 +84,11 @@ public class ReviewServiceImpl implements ReviewService {
             // 관리자인 경우 바로 리뷰 삭제
             reviewRepository.deleteById(reviewId);
         } else {
-            // 자신의 리뷰인지 확인
-            Review dbReview = reviewDomainService.getReviewOfCustomer(reviewId,
-              SecurityUtil.getCurrentUsername());
+            loggedInUsername = SecurityUtil.getCurrentUsername();
+            // 리뷰 삭제할 수 있는지 확인
+            reviewDomainService.checkCanUpdateReview(reviewId, loggedInUsername);
             // 리뷰 삭제
-            reviewRepository.delete(dbReview);
+            reviewQueryRepository.deleteReview(reviewId);
         }
     }
 
@@ -96,10 +99,10 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     @Cacheable(value = "reviewList", key = "'storeId:' + #storeId")
     public List<ReviewResponse> getReviewList(Long storeId) {
-        return reviewRepository.findAllByStoreIdOrderByCreatedAtDesc(storeId).stream()
-                               .map(Review::to)
-                               .map(ReviewResponse::new)
-                               .toList();
+        return reviewQueryRepository.findAllByStoreIdOrderByCreatedAtDesc(storeId).stream()
+                                    .map(Review::to)
+                                    .map(ReviewResponse::new)
+                                    .toList();
     }
 
     /**
@@ -108,10 +111,10 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional(readOnly = true)
     public ReviewResponse getReviewByReviewId(Long reviewId) {
-        return reviewRepository.findById(reviewId)
-                               .map(Review::to)
-                               .map(ReviewResponse::new)
-                               .orElseThrow(() -> new CustomException(NOT_EXISTED_REVIEW));
+        return reviewQueryRepository.findById(reviewId)
+                                    .map(Review::to)
+                                    .map(ReviewResponse::new)
+                                    .orElseThrow(() -> new CustomException(NOT_EXISTED_REVIEW));
     }
 
 }

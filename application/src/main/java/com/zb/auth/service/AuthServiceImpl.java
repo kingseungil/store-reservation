@@ -16,10 +16,10 @@ import com.zb.entity.Authority;
 import com.zb.entity.Customer;
 import com.zb.entity.Manager;
 import com.zb.exception.CustomException;
-import com.zb.repository.CustomerQueryRepository;
 import com.zb.repository.CustomerRepository;
-import com.zb.repository.ManagerQueryRepository;
 import com.zb.repository.ManagerRepository;
+import com.zb.repository.queryDsl.CustomerQueryRepository;
+import com.zb.repository.queryDsl.ManagerQueryRepository;
 import com.zb.type.UserRole;
 import com.zb.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -93,6 +93,7 @@ public class AuthServiceImpl implements AuthService {
         Manager manager = Manager.builder()
                                  .username(form.getUsername())
                                  .password(passwordEncoder.encode(form.getPassword()))
+                                 .phoneNumber(form.getPhoneNumber())
                                  .activated(true)
                                  .authority(authority)
                                  .build();

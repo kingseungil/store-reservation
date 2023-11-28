@@ -5,7 +5,7 @@ import static com.zb.type.ErrorCode.USER_NOT_FOUND;
 
 import com.zb.entity.Manager;
 import com.zb.exception.CustomException;
-import com.zb.repository.ManagerQueryRepository;
+import com.zb.repository.queryDsl.ManagerQueryRepository;
 import java.util.Collections;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class ManagerUserDetailsService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return managerQueryRepository.findByUsername(username)
+        return managerQueryRepository.findByUsernameForSecurity(username)
                                      .map(this::createUser)
                                      .orElseThrow(
                                        () -> new CustomException(USER_NOT_FOUND)
