@@ -67,7 +67,7 @@ public class Review extends BaseEntity {
                              .content(review.getContent())
                              .rating(review.getRating())
                              .customer(CustomerInfoDto.from(review.getCustomer()))
-                             .store(StoreInfoDto.from(review.getStore(), review.getReservation().getStatus()))
+                             .store(StoreInfoDto.from(review.getStore()))
                              .build();
     }
 

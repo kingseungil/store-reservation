@@ -76,7 +76,7 @@ public class Reservation extends BaseEntity {
     public static ReservationDto.Info to(Reservation reservation) {
         return ReservationDto.Info.builder()
                                   .customer(CustomerInfoDto.from(reservation.getCustomer()))
-                                  .store(StoreInfoDto.from(reservation.getStore(), reservation.getStatus()))
+                                  .store(StoreInfoDto.from(reservation.getStore()))
                                   .build();
     }
 
