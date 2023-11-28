@@ -3,8 +3,10 @@ package com.zb.review.service;
 import static com.zb.type.ErrorCode.NOT_EXISTED_REVIEW;
 import static com.zb.type.UserRole.ROLE_ADMIN;
 
+import com.zb.dto.review.ReviewDto;
 import com.zb.dto.review.ReviewDto.ReviewRequest;
 import com.zb.dto.review.ReviewDto.ReviewResponse;
+import com.zb.dto.review.ReviewDto.ReviewResponseList;
 import com.zb.entity.Customer;
 import com.zb.entity.Reservation;
 import com.zb.entity.Review;
@@ -98,11 +100,11 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional(readOnly = true)
     @Cacheable(value = "reviewList", key = "'storeId:' + #storeId")
-    public List<ReviewResponse> getReviewList(Long storeId) {
-        return reviewQueryRepository.findAllByStoreIdOrderByCreatedAtDesc(storeId).stream()
-                                    .map(Review::to)
-                                    .map(ReviewResponse::new)
-                                    .toList();
+    public ReviewResponseList getReviewList(Long storeId) {
+        List<ReviewDto.Info> list = reviewQueryRepository.findAllByStoreIdOrderByCreatedAtDesc(storeId).stream()
+                                                         .map(Review::to)
+                                                         .toList();
+        return new ReviewResponseList(list);
     }
 
     /**

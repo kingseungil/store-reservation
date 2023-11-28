@@ -4,11 +4,11 @@ import com.zb.annotation.CustomerOrAdmin;
 import com.zb.annotation.OnlyCustomer;
 import com.zb.dto.review.ReviewDto.ReviewRequest;
 import com.zb.dto.review.ReviewDto.ReviewResponse;
+import com.zb.dto.review.ReviewDto.ReviewResponseList;
 import com.zb.review.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +30,7 @@ public class ReviewController {
 
     @GetMapping("/list/{storeId}")
     @Operation(summary = "리뷰 목록 조회")
-    public ResponseEntity<List<ReviewResponse>> getReview(
+    public ResponseEntity<ReviewResponseList> getReview(
       @PathVariable Long storeId
     ) {
         return ResponseEntity.ok(reviewService.getReviewList(storeId));

@@ -2,7 +2,7 @@ package com.zb.review.service;
 
 import com.zb.dto.review.ReviewDto.ReviewRequest;
 import com.zb.dto.review.ReviewDto.ReviewResponse;
-import java.util.List;
+import com.zb.dto.review.ReviewDto.ReviewResponseList;
 
 public interface ReviewService {
 
@@ -12,7 +12,7 @@ public interface ReviewService {
 
     void deleteReview(Long storeId, Long reviewId);
 
-    List<ReviewResponse> getReviewList(Long storeId);
+    ReviewResponseList getReviewList(Long storeId);
 
     ReviewResponse getReviewByReviewId(Long reviewId);
 

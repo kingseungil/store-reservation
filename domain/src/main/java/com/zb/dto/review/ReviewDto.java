@@ -9,6 +9,7 @@ import com.zb.dto.store.StoreInfoDto;
 import com.zb.dto.user.CustomerInfoDto;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -53,5 +54,14 @@ public class ReviewDto {
     public static class ReviewResponse {
 
         private ReviewDto.Info info;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class ReviewResponseList {
+
+        private List<ReviewDto.Info> reviewList;
     }
 }
