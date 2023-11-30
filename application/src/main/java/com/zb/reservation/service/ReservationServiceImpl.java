@@ -21,6 +21,7 @@ import com.zb.repository.queryDsl.ReservationQueryRepository;
 import com.zb.service.CustomerDomainService;
 import com.zb.service.ReservationDomainService;
 import com.zb.util.SecurityUtil;
+import com.zb.validator.ReservationValidator;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -39,6 +40,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final StoreRepository storeRepository;
     private final ReservationDomainService reservationDomainService;
     private final CustomerDomainService customerDomainService;
+    private final ReservationValidator reservationValidator;
     private String loggedInUsername;
 
     /* 손님용 */
@@ -60,6 +62,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         // 상점 예약
         Reservation reservation = Reservation.from(form, customer, store);
+        reservation.validate(reservationValidator);
         reservationRepository.save(reservation);
     }
 

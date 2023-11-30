@@ -13,6 +13,7 @@ import com.zb.repository.queryDsl.StoreQueryRepository;
 import com.zb.service.ManagerDomainService;
 import com.zb.service.StoreDomainService;
 import com.zb.util.SecurityUtil;
+import com.zb.validator.StoreValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -29,6 +30,7 @@ public class StoreServiceImpl implements StoreServce {
     private final StoreQueryRepository storeQueryRepository;
     private final StoreDomainService storeDomainService;
     private final ManagerDomainService managerDomainService;
+    private final StoreValidator storeValidator;
 
     private String loggedInUsername;
 
@@ -45,6 +47,7 @@ public class StoreServiceImpl implements StoreServce {
         Manager manager = managerDomainService.getLoggedInManager();
         // 상점 등록
         Store store = Store.from(form, manager);
+        store.validate(storeValidator);
         storeRepository.save(store);
     }
 

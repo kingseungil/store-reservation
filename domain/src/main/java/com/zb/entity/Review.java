@@ -4,6 +4,7 @@ import com.zb.dto.review.ReviewDto;
 import com.zb.dto.review.ReviewDto.ReviewRequest;
 import com.zb.dto.store.StoreInfoDto;
 import com.zb.dto.user.CustomerInfoDto;
+import com.zb.validator.ReviewValidator;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -71,4 +72,7 @@ public class Review extends BaseEntity {
                              .build();
     }
 
+    public void validate(ReviewValidator reviewValidator) {
+        reviewValidator.validate(this);
+    }
 }

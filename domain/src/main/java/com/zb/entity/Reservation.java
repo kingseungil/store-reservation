@@ -15,6 +15,7 @@ import com.zb.dto.store.StoreInfoDto;
 import com.zb.dto.user.CustomerInfoDto;
 import com.zb.exception.CustomException;
 import com.zb.type.ReservationStatus;
+import com.zb.validator.ReservationValidator;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -76,6 +77,10 @@ public class Reservation extends BaseEntity {
                                   .customer(CustomerInfoDto.from(reservation.getCustomer()))
                                   .store(StoreInfoDto.from(reservation.getStore()))
                                   .build();
+    }
+
+    public void validate(ReservationValidator reservationValidator) {
+        reservationValidator.validate(this);
     }
 
     // cancel

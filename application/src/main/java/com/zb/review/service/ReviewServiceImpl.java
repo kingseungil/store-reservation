@@ -18,6 +18,7 @@ import com.zb.service.CustomerDomainService;
 import com.zb.service.ReservationDomainService;
 import com.zb.service.ReviewDomainService;
 import com.zb.util.SecurityUtil;
+import com.zb.validator.ReviewValidator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -34,6 +35,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReservationDomainService reservationDomainService;
     private final ReviewDomainService reviewDomainService;
     private final CustomerDomainService customerDomainService;
+    private final ReviewValidator reviewValidator;
     private String loggedInUsername;
 
     /**
@@ -58,6 +60,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         // 리뷰 작성
         Review review = Review.from(form, customer, store, reservation);
+        review.validate(reviewValidator);
         reviewRepository.save(review);
     }
 

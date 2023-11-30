@@ -4,6 +4,7 @@ package com.zb.entity;
 import com.zb.dto.store.StoreDto;
 import com.zb.dto.store.StoreDto.StoreRequest;
 import com.zb.dto.user.ManagerInfoDto;
+import com.zb.validator.StoreValidator;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -52,6 +53,7 @@ public class Store extends BaseEntity {
     @OneToMany(mappedBy = "store")
     private List<Review> reviews = new ArrayList<>();
 
+
     // from
     public static Store from(StoreRequest form, Manager manager) {
         return Store.builder()
@@ -71,5 +73,9 @@ public class Store extends BaseEntity {
                             .description(store.getDescription())
                             .manager(ManagerInfoDto.from(store.getManager()))
                             .build();
+    }
+
+    public void validate(StoreValidator storeValidator) {
+        storeValidator.validate(this);
     }
 }
