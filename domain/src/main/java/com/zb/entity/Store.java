@@ -19,12 +19,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "store")
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -73,11 +71,5 @@ public class Store extends BaseEntity {
                             .description(store.getDescription())
                             .manager(ManagerInfoDto.from(store.getManager()))
                             .build();
-    }
-
-    public void updateStore(StoreRequest form) {
-        this.storeName = form.getStoreName();
-        this.location = form.getLocation();
-        this.description = form.getDescription();
     }
 }

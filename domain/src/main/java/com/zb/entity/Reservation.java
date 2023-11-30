@@ -30,12 +30,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "reservation")
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -109,7 +107,7 @@ public class Reservation extends BaseEntity {
 
         this.status = ARRIVED;
     }
-    
+
     // arrived 일때만 리뷰 작성 가능
     public void checkStatusForReview() {
         if (this.status != ARRIVED) {

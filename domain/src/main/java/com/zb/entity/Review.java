@@ -17,12 +17,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "review")
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -72,5 +70,5 @@ public class Review extends BaseEntity {
                              .store(StoreInfoDto.from(review.getStore()))
                              .build();
     }
-    
+
 }
