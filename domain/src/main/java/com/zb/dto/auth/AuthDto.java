@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 public class AuthDto {
@@ -17,6 +18,8 @@ public class AuthDto {
     public static class SignIn {
 
         @Getter
+        @Setter
+        @AllArgsConstructor
         public static class SignInRequest {
 
             @NotNull
@@ -45,6 +48,8 @@ public class AuthDto {
     public static class SignUpCustomer {
 
         @Getter
+        @Setter
+        @AllArgsConstructor
         public static class SignUpRequest {
 
             @NotNull
@@ -89,6 +94,8 @@ public class AuthDto {
     public static class SignUpManager {
 
         @Getter
+        @Setter
+        @AllArgsConstructor
         public static class SignUpRequest {
 
             @NotNull

@@ -31,4 +31,7 @@ public class Authority {
 
     @OneToOne(mappedBy = "authority")
     private Manager manager;
+
+    public Authority(UserRole userRole) {
+    }
 }
