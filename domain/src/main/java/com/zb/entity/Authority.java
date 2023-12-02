@@ -33,5 +33,6 @@ public class Authority {
     private Manager manager;
 
     public Authority(UserRole userRole) {
+        this.authorityName = userRole;
     }
 }

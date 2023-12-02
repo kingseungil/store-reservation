@@ -36,6 +36,9 @@ allprojects {
         testImplementation 'org.junit.jupiter:junit-jupiter-api'
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
         testImplementation 'org.assertj:assertj-core'
+
+        // h2
+        runtimeOnly 'com.h2database:h2'
     }
 
     test {
