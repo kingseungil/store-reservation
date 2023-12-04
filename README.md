@@ -32,7 +32,7 @@
 
 ## ERD
 
-![](READMD_images/8bd8c186.png)
+![](READMD_images/img.png)
 
 ## API 명세서
 
