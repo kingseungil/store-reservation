@@ -36,6 +36,8 @@ allprojects {
         testImplementation 'org.junit.jupiter:junit-jupiter-api'
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
         testImplementation 'org.assertj:assertj-core'
+        testImplementation 'io.rest-assured:rest-assured'
+        testImplementation 'org.springframework.security:spring-security-test'
 
         // h2
         runtimeOnly 'com.h2database:h2'
@@ -115,9 +117,6 @@ project(':application') {
 
         // Security
         implementation 'org.springframework.boot:spring-boot-starter-security'
-
-        // test
-        testImplementation 'io.rest-assured:rest-assured'
 
         // MySQL
         runtimeOnly 'com.mysql:mysql-connector-j'

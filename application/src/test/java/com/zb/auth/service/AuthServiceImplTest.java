@@ -11,7 +11,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.zb.auth.jwt.JwtTokenProvider;
+import com.zb.common.ServiceTest;
 import com.zb.dto.auth.AuthDto.SignIn.SignInRequest;
 import com.zb.dto.auth.AuthDto.SignIn.SignInResponse;
 import com.zb.dto.auth.AuthDto.SignUpCustomer.SignUpRequest;
@@ -20,54 +20,12 @@ import com.zb.dto.auth.AuthDto.SignUpManager;
 import com.zb.entity.Customer;
 import com.zb.entity.Manager;
 import com.zb.exception.CustomException;
-import com.zb.repository.CustomerRepository;
-import com.zb.repository.ManagerRepository;
-import com.zb.repository.queryDsl.CustomerQueryRepository;
-import com.zb.repository.queryDsl.ManagerQueryRepository;
 import com.zb.type.UserRole;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-@ExtendWith(MockitoExtension.class)
-class AuthServiceImplTest {
-
-    @Mock
-    CustomerQueryRepository customerQueryRepository;
-
-    @Mock
-    CustomerRepository customerRepository;
-
-    @Mock
-    ManagerQueryRepository managerQueryRepository;
-
-    @Mock
-    ManagerRepository managerRepository;
-
-    @Mock
-    PasswordEncoder passwordEncoder;
-
-    @Mock
-    JwtTokenProvider jwtTokenProvider;
-
-    @Mock
-    UserDetailServiceSelector userDetailServiceSelector;
-
-    @Mock
-    UserDetailsService userDetailsService;
-
-    @Mock
-    UserDetails UserDetails;
-
-    @InjectMocks
-    AuthServiceImpl authService;
+public class AuthServiceImplTest extends ServiceTest {
 
     @Nested
     class SignUp {
