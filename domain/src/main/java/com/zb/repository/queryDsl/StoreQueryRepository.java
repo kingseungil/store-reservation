@@ -51,7 +51,7 @@ public class StoreQueryRepository {
                                                  qStore.storeName,
                                                  qStore.description,
                                                  Projections.fields(Manager.class,
-                                                   qManager.managerId,
+                                                   qManager.id,
                                                    qManager.username
                                                  ).as("manager")
                                                ))
@@ -78,7 +78,7 @@ public class StoreQueryRepository {
 
     private BooleanExpression eqStoreId(Long storeId) {
         if (storeId != null) {
-            return qStore.storeId.eq(storeId);
+            return qStore.id.eq(storeId);
         }
 
         return null;
@@ -86,19 +86,19 @@ public class StoreQueryRepository {
 
     public Slice<Tuple> findAllWithAverageRating(Pageable pageable) {
         List<Tuple> stores = queryFactory.select(Projections.fields(Store.class,
-                                             qStore.storeId,
+                                             qStore.id,
                                              qStore.storeName,
                                              qStore.location,
                                              qStore.description,
                                              Projections.fields(Manager.class,
-                                               qManager.managerId,
+                                               qManager.id,
                                                qManager.username
                                              ).as("manager")),
                                            qReview.rating.avg().as("averageRating"))
                                          .from(qStore)
                                          .leftJoin(qStore.manager, qManager)
                                          .leftJoin(qStore.reviews, qReview)
-                                         .groupBy(qStore.storeId)
+                                         .groupBy(qStore.id)
                                          .orderBy(qReview.rating.avg().desc())
                                          .offset(pageable.getOffset())
                                          .limit(pageable.getPageSize() + 1)
@@ -115,12 +115,12 @@ public class StoreQueryRepository {
 
     public Optional<Tuple> findByIdWithAverageRating(Long storeId) {
         return Optional.ofNullable(queryFactory.select(Projections.fields(Store.class,
-                                                   qStore.storeId,
+                                                   qStore.id,
                                                    qStore.storeName,
                                                    qStore.location,
                                                    qStore.description,
                                                    Projections.fields(Manager.class,
-                                                     qManager.managerId,
+                                                     qManager.id,
                                                      qManager.username
                                                    ).as("manager")),
                                                  qReview.rating.avg().as("averageRating"))
@@ -128,7 +128,7 @@ public class StoreQueryRepository {
                                                .leftJoin(qStore.manager, qManager)
                                                .leftJoin(qStore.reviews, qReview)
                                                .where(eqStoreId(storeId))
-                                               .groupBy(qStore.storeId)
+                                               .groupBy(qStore.id)
                                                .fetchOne());
     }
 }

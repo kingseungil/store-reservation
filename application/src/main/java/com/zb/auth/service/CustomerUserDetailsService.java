@@ -6,6 +6,7 @@ import static com.zb.type.ErrorCode.USER_NOT_FOUND;
 import com.zb.entity.Customer;
 import com.zb.exception.CustomException;
 import com.zb.repository.queryDsl.CustomerQueryRepository;
+import com.zb.type.UserRole;
 import java.util.Collections;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +33,7 @@ public class CustomerUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return customerQueryRepository.findByUsernameForSecurity(username)
                                       .map(this::createUser)
-                                      .orElseThrow(
-                                        () -> new CustomException(USER_NOT_FOUND)
-                                      );
+                                      .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
     }
 
     /**
@@ -45,8 +44,7 @@ public class CustomerUserDetailsService implements UserDetailsService {
             throw new CustomException(NOT_ACTIVATED_USER);
         }
 
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(
-          String.valueOf(customer.getAuthority().getAuthorityName()));
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(UserRole.ROLE_CUSTOMER.name());
 
         return new User(customer.getUsername(), customer.getPassword(), Collections.singleton(authority));
     }

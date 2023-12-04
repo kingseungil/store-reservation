@@ -21,7 +21,7 @@ public class StoreInfoDto {
 
     public static StoreInfoDto from(Store store) {
         return StoreInfoDto.builder()
-                           .id(store.getStoreId())
+                           .id(store.getId())
                            .storeName(store.getStoreName())
                            .location(store.getLocation())
                            .build();

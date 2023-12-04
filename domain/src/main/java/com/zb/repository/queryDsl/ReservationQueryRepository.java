@@ -36,7 +36,7 @@ public class ReservationQueryRepository {
         long affectedRows = updateClause.set(Collections.singletonList(qReservation.status),
                                           Collections.singletonList(status))
                                         .where(eqReservationId(reservationId))
-                                        .where(eqUsername(username))
+                                        .where(eqCustomerUsername(username))
                                         .execute();
 
         if (affectedRows != 1) {
@@ -44,9 +44,30 @@ public class ReservationQueryRepository {
         }
     }
 
-    private BooleanExpression eqUsername(String username) {
+    private BooleanExpression eqCustomerUsername(String username) {
         if (username != null) {
             return qReservation.customer.username.eq(username);
+        }
+
+        return null;
+    }
+
+    public void updateReservationStatusForManager(Long reservationId, String username, ReservationStatus status) {
+        JPAUpdateClause updateClause = queryFactory.update(qReservation);
+        long affectedRows = updateClause.set(Collections.singletonList(qReservation.status),
+                                          Collections.singletonList(status))
+                                        .where(eqReservationId(reservationId))
+                                        .where(eqManagerUsername(username))
+                                        .execute();
+
+        if (affectedRows != 1) {
+            throw new CustomException(NOT_RESERVATION_OWNER);
+        }
+    }
+
+    private BooleanExpression eqManagerUsername(String username) {
+        if (username != null) {
+            return qReservation.store.manager.username.eq(username);
         }
 
         return null;
@@ -58,12 +79,12 @@ public class ReservationQueryRepository {
                                                  qReservation.reservationDate,
                                                  qReservation.status,
                                                  Projections.fields(Customer.class,
-                                                   qCustomer.customerId,
+                                                   qCustomer.id,
                                                    qCustomer.username,
                                                    qCustomer.phoneNumber
                                                  ).as("customer"),
                                                  Projections.fields(Store.class,
-                                                   qStore.storeId,
+                                                   qStore.id,
                                                    qStore.storeName,
                                                    qStore.location
                                                  ).as("store")
@@ -89,12 +110,12 @@ public class ReservationQueryRepository {
                              qReservation.reservationDate,
                              qReservation.status,
                              Projections.fields(Customer.class,
-                               qCustomer.customerId,
+                               qCustomer.id,
                                qCustomer.username,
                                qCustomer.phoneNumber
                              ).as("customer"),
                              Projections.fields(Store.class,
-                               Expressions.asNumber(storeId).as("storeId"),
+                               Expressions.asNumber(storeId).as("id"),
                                qStore.storeName,
                                qStore.location
                              ).as("store")
@@ -118,7 +139,7 @@ public class ReservationQueryRepository {
 
     private BooleanExpression eqStoreId(Long storeId) {
         if (storeId != null) {
-            return qReservation.store.storeId.eq(storeId);
+            return qReservation.store.id.eq(storeId);
         }
 
         return null;

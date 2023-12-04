@@ -19,7 +19,7 @@ public class ManagerQueryRepository {
 
     public Optional<Manager> findByUsername(String username) {
         return Optional.ofNullable(queryFactory.select(Projections.fields(Manager.class,
-                                                 manager.managerId,
+                                                 manager.id,
                                                  manager.username,
                                                  manager.phoneNumber))
                                                .from(manager)

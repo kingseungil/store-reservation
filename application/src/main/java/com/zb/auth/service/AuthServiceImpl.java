@@ -2,8 +2,6 @@ package com.zb.auth.service;
 
 import static com.zb.type.ErrorCode.ALREADY_EXISTED_USER;
 import static com.zb.type.ErrorCode.UNMATCHED_PASSWORD;
-import static com.zb.type.UserRole.ROLE_CUSTOMER;
-import static com.zb.type.UserRole.ROLE_MANAGER;
 
 import com.zb.auth.jwt.JwtTokenProvider;
 import com.zb.dto.auth.AuthDto.SignIn;
@@ -12,7 +10,6 @@ import com.zb.dto.auth.AuthDto.SignUpCustomer;
 import com.zb.dto.auth.AuthDto.SignUpCustomer.SignUpResponse;
 import com.zb.dto.auth.AuthDto.SignUpManager;
 import com.zb.dto.auth.AuthDto.SignUpManager.SignUpRequest;
-import com.zb.entity.Authority;
 import com.zb.entity.Customer;
 import com.zb.entity.Manager;
 import com.zb.exception.CustomException;
@@ -20,7 +17,6 @@ import com.zb.repository.CustomerRepository;
 import com.zb.repository.ManagerRepository;
 import com.zb.repository.queryDsl.CustomerQueryRepository;
 import com.zb.repository.queryDsl.ManagerQueryRepository;
-import com.zb.type.UserRole;
 import com.zb.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -57,14 +53,11 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomException(ALREADY_EXISTED_USER);
         }
 
-        Authority authority = createAuthority(ROLE_CUSTOMER);
-
         Customer customer = Customer.builder()
                                     .username(form.getUsername())
                                     .password(passwordEncoder.encode(form.getPassword()))
                                     .phoneNumber(form.getPhoneNumber())
                                     .activated(true)
-                                    .authority(authority)
                                     .build();
 
         // 회원 저장
@@ -88,14 +81,11 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomException(ALREADY_EXISTED_USER);
         }
 
-        Authority authority = createAuthority(ROLE_MANAGER);
-
         Manager manager = Manager.builder()
                                  .username(form.getUsername())
                                  .password(passwordEncoder.encode(form.getPassword()))
                                  .phoneNumber(form.getPhoneNumber())
                                  .activated(true)
-                                 .authority(authority)
                                  .build();
 
         // 회원 저장
@@ -104,11 +94,6 @@ public class AuthServiceImpl implements AuthService {
         return SignUpManager.SignUpResponse.from(manager);
     }
 
-    private static Authority createAuthority(UserRole userRole) {
-        return Authority.builder()
-                        .authorityName(userRole)
-                        .build();
-    }
 
     /**
      * 로그인

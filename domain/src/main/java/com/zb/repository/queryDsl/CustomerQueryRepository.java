@@ -19,7 +19,7 @@ public class CustomerQueryRepository {
 
     public Optional<Customer> findByUsername(String username) {
         return Optional.ofNullable(queryFactory.select(Projections.fields(Customer.class,
-                                                 customer.customerId,
+                                                 customer.id,
                                                  customer.username,
                                                  customer.phoneNumber))
                                                .from(customer)

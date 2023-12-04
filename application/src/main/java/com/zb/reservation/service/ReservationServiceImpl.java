@@ -117,12 +117,12 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public void acceptReservation(Long reservationId) {
-        loggedInUsername = SecurityUtil.getCurrentUsername();
+        System.out.println("loggedInUsername = " + loggedInUsername);
         // 예약 수락할 수 있는지 확인
         reservationDomainService.checkStatusForAccept(reservationId);
 
         // 예약 상태 변경
-        reservationQueryRepository.updateReservationStatus(
+        reservationQueryRepository.updateReservationStatusForManager(
           reservationId, loggedInUsername, ACCEPTED);
     }
 
@@ -137,7 +137,7 @@ public class ReservationServiceImpl implements ReservationService {
         reservationDomainService.checkStatusForReject(reservationId);
 
         // 예약 상태 변경
-        reservationQueryRepository.updateReservationStatus(
+        reservationQueryRepository.updateReservationStatusForManager(
           reservationId, loggedInUsername, REJECTED);
     }
 

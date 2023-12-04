@@ -21,7 +21,7 @@ public class CustomerInfoDto {
 
     public static CustomerInfoDto from(Customer customer) {
         return CustomerInfoDto.builder()
-                              .id(customer.getCustomerId())
+                              .id(customer.getId())
                               .username(customer.getUsername())
                               .phoneNumber(customer.getPhoneNumber())
                               .build();

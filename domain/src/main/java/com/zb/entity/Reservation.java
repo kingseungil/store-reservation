@@ -41,7 +41,7 @@ import lombok.NoArgsConstructor;
 public class Reservation extends BaseEntity {
 
     @Id
-    @Column(name = "reservation_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -122,7 +122,7 @@ public class Reservation extends BaseEntity {
 
     // 예약자와 리뷰 작성자가 같은지 확인
     public void checkReservationOwner(Long customerId) {
-        if (!this.customer.getCustomerId().equals(customerId)) {
+        if (!this.customer.getId().equals(customerId)) {
             throw new CustomException(CANNOT_WRITE_REVIEW);
         }
     }

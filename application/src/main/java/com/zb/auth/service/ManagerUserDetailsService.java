@@ -6,6 +6,7 @@ import static com.zb.type.ErrorCode.USER_NOT_FOUND;
 import com.zb.entity.Manager;
 import com.zb.exception.CustomException;
 import com.zb.repository.queryDsl.ManagerQueryRepository;
+import com.zb.type.UserRole;
 import java.util.Collections;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,20 +33,17 @@ public class ManagerUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return managerQueryRepository.findByUsernameForSecurity(username)
                                      .map(this::createUser)
-                                     .orElseThrow(
-                                       () -> new CustomException(USER_NOT_FOUND)
-                                     );
+                                     .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
     }
 
     /**
-     * Customer 엔티티를 UserDetails로 변환합니다. 사용자가 활성화되지 않은 경우, CustomException이 발생합니다.
+     * Manager 엔티티를 UserDetails로 변환합니다. 사용자가 활성화되지 않은 경우, CustomException이 발생합니다.
      */
     private User createUser(Manager manager) {
         if (!manager.isActivated()) {
             throw new CustomException(NOT_ACTIVATED_USER);
         }
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(
-          String.valueOf(manager.getAuthority().getAuthorityName()));
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(UserRole.ROLE_MANAGER.name());
 
         return new User(manager.getUsername(), manager.getPassword(), Collections.singleton(authority));
     }

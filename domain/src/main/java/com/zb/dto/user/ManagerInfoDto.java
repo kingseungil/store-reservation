@@ -20,7 +20,7 @@ public class ManagerInfoDto {
 
     public static ManagerInfoDto from(Manager manager) {
         return ManagerInfoDto.builder()
-                             .id(manager.getManagerId())
+                             .id(manager.getId())
                              .username(manager.getUsername())
                              .build();
     }

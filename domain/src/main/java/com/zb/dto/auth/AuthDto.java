@@ -78,14 +78,12 @@ public class AuthDto {
             private Long id;
             private String username;
             private String phoneNumber;
-            private UserRole authority;
 
             public static SignUpResponse from(Customer customer) {
                 return SignUpResponse.builder()
-                                     .id(customer.getCustomerId())
+                                     .id(customer.getId())
                                      .username(customer.getUsername())
                                      .phoneNumber(customer.getPhoneNumber())
-                                     .authority(customer.getAuthority().getAuthorityName())
                                      .build();
             }
         }
@@ -124,14 +122,12 @@ public class AuthDto {
             private Long id;
             private String username;
             private String phoneNumber;
-            private UserRole authority;
 
             public static SignUpResponse from(Manager manager) {
                 return SignUpResponse.builder()
-                                     .id(manager.getManagerId())
+                                     .id(manager.getId())
                                      .username(manager.getUsername())
                                      .phoneNumber(manager.getPhoneNumber())
-                                     .authority(manager.getAuthority().getAuthorityName())
                                      .build();
             }
         }

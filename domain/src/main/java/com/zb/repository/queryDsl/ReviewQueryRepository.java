@@ -40,7 +40,7 @@ public class ReviewQueryRepository {
 
     private BooleanExpression eqCustomerId(Long customerId) {
         if (customerId != null) {
-            return qReview.customer.customerId.eq(customerId);
+            return qReview.customer.id.eq(customerId);
         }
 
         return null;
@@ -61,12 +61,12 @@ public class ReviewQueryRepository {
                                                  qReview.rating,
                                                  qReview.createdAt,
                                                  Projections.fields(Customer.class,
-                                                   qCustomer.customerId,
+                                                   qCustomer.id,
                                                    qCustomer.username,
                                                    qCustomer.phoneNumber
                                                  ).as("customer"),
                                                  Projections.fields(Store.class,
-                                                   qStore.storeId,
+                                                   qStore.id,
                                                    qStore.storeName,
                                                    qStore.location
                                                  ).as("store")
@@ -108,12 +108,12 @@ public class ReviewQueryRepository {
                              qReview.rating,
                              qReview.createdAt,
                              Projections.fields(Customer.class,
-                               qCustomer.customerId,
+                               qCustomer.id,
                                qCustomer.username,
                                qCustomer.phoneNumber
                              ).as("customer"),
                              Projections.fields(Store.class,
-                               Expressions.asNumber(storeId).as("storeId"),
+                               Expressions.asNumber(storeId).as("id"),
                                qStore.storeName,
                                qStore.location
                              ).as("store")
@@ -128,7 +128,7 @@ public class ReviewQueryRepository {
 
     private BooleanExpression eqStoreId(Long storeId) {
         if (storeId != null) {
-            return qReview.store.storeId.eq(storeId);
+            return qReview.store.id.eq(storeId);
         }
 
         return null;

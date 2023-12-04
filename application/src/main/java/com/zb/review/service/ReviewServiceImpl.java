@@ -50,10 +50,10 @@ public class ReviewServiceImpl implements ReviewService {
 
         // 예약 조회 및 상태 확인
         Reservation reservation = reservationDomainService.getReservationForReivew(reservationId,
-          customer.getCustomerId());
+          customer.getId());
 
         // 리뷰 작성 여부 확인
-        reviewDomainService.checkReviewExist(customer.getCustomerId(), reservation);
+        reviewDomainService.checkReviewExist(customer.getId(), reservation);
 
         // 해당 상점 조회
         Store store = reservation.getStore();

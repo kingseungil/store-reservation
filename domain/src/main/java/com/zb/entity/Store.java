@@ -30,9 +30,9 @@ import lombok.NoArgsConstructor;
 public class Store extends BaseEntity {
 
     @Id
-    @Column(name = "store_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long storeId;
+    private Long id;
 
     @Column(name = "store_name", length = 50)
     private String storeName;
@@ -67,7 +67,7 @@ public class Store extends BaseEntity {
     // to
     public static StoreDto.Info to(Store store) {
         return StoreDto.Info.builder()
-                            .id(store.getStoreId())
+                            .id(store.getId())
                             .storeName(store.getStoreName())
                             .location(store.getLocation())
                             .description(store.getDescription())
